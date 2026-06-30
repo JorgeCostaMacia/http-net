@@ -1,2 +1,4 @@
 <Solution>
+  <Project Path="src/JorgeCostaMacia.Http/JorgeCostaMacia.Http.csproj" />
+  <Project Path="test/JorgeCostaMacia.Http.Tests/JorgeCostaMacia.Http.Tests.csproj" />
 </Solution>
