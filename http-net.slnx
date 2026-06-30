@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="src/JorgeCostaMacia.Http/JorgeCostaMacia.Http.csproj" />
+  <Project Path="src/JorgeCostaMacia.Http.Exception/JorgeCostaMacia.Http.Exception.csproj" />
   <Project Path="test/JorgeCostaMacia.Http.Tests/JorgeCostaMacia.Http.Tests.csproj" />
 </Solution>

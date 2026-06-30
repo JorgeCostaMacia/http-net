@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<!-- net9+ only: ExceptionHandlerOptions.StatusCodeSelector was added in ASP.NET Core 9 -->
+		<TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+		<Description>Global HTTP exception-handling middleware that maps domain, validation and bad-request exceptions to the right HTTP status code</Description>
+		<PackageTags>http,exception,aspnetcore,middleware,error,domain</PackageTags>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<PackageReference Include="JorgeCostaMacia.Exception" />
+	</ItemGroup>
+
+</Project>
