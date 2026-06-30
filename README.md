@@ -4,7 +4,7 @@
 
 # http-net
 
-> ASP.NET Core building blocks — request/response abstractions, exception handling, ProblemDetails, OpenAPI, API versioning and Serilog request logging — each scoped to a single concern and shipped independently under `JorgeCostaMacia.Http.*`.
+> HTTP building blocks for ASP.NET Core — request/response abstractions, exception handling, ProblemDetails, OpenAPI, API versioning and Serilog request logging — each scoped to a single concern and shipped independently under `JorgeCostaMacia.Http.*`.
 
 [![License](https://img.shields.io/github/license/JorgeCostaMacia/http-net.svg)](LICENSE.txt)
 [![Main](https://github.com/JorgeCostaMacia/http-net/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/JorgeCostaMacia/http-net/actions/workflows/main.yml)
