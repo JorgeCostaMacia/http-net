@@ -1,0 +1,18 @@
+<Project>
+
+	<!-- Central Package Management: all third-party package versions live here, in one place.
+	     Cross-repo deps on the shared-net foundation (JorgeCostaMacia.Exception / GuidFactory /
+	     Serilog) are PackageReferences to the published packages, versioned here too. Inter-package
+	     JorgeCostaMacia.Http.* deps (same repo) are ProjectReferences (lockstep versioning); pack
+	     emits them as nuspec <dependency> at the shared version, so CPM doesn't manage them. -->
+	<PropertyGroup>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.300" />
+		<PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
+		<PackageVersion Include="xunit.v3" Version="3.2.2" />
+	</ItemGroup>
+
+</Project>
