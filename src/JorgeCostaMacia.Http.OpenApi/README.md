@@ -27,6 +27,8 @@ Registers a schema transformer that adds `errors`, `requestId`, `traceId`, `node
 
 **.NET 10** — uses the native `Microsoft.AspNetCore.OpenApi` (10.x) generation pipeline.
 
+Depends on [Microsoft.AspNetCore.OpenApi](https://www.nuget.org/packages/Microsoft.AspNetCore.OpenApi/) (which brings the ASP.NET Core shared framework transitively).
+
 ## About
 
 `JorgeCostaMacia.Http.OpenApi` is part of **[http-net](https://github.com/JorgeCostaMacia/http-net)** — ASP.NET Core building blocks, each scoped to a single concern and reusable across your services.

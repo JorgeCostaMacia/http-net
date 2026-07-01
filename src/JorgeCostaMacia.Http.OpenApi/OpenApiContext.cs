@@ -18,8 +18,8 @@ public static class OpenApiContext
     /// specifically targeting RFC 7807 (Problem Details) to ensure consistency across microservices.
     /// <para>Features:</para>
     /// <list type="bullet">
-    /// <item><description><b>ProblemDetails Enrichment:</b> Adds missing fields like <c>errors</c>, <c>requestId</c>, and <c>traceId</c> to the OpenAPI schema.</description></item>
-    /// <item><description><b>DDD Integration:</b> Injects domain-specific properties (<c>aggregateId</c>, <c>aggregateType</c>) into error responses for better debugging.</description></item>
+    /// <item><description><b>ProblemDetails Enrichment:</b> Adds fields like <c>errors</c>, <c>requestId</c>, <c>traceId</c> and <c>nodeId</c> to the OpenAPI schema.</description></item>
+    /// <item><description><b>DDD Integration:</b> Injects domain-specific properties (<c>aggregateId</c>, <c>aggregateCode</c>, <c>aggregateType</c>) into error responses for better debugging.</description></item>
     /// <item><description><b>Native Performance:</b> Uses the built-in Microsoft OpenAPI engine, avoiding heavy third-party dependencies.</description></item>
     /// <item><description><b>Nullability Support:</b> Correctly renders <c>JsonSchemaType.Null</c> for optional properties in the documentation.</description></item>
     /// </list>
