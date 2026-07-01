@@ -18,7 +18,15 @@ One of the following SDKs: **.NET 8 / 9 / 10** *(.NET 10 recommended)*.
 
 ## Packages
 
-Being migrated from the legacy monorepo into independent `JorgeCostaMacia.Http.*` packages. This section will list each package as it ships.
+| Package | What it does |
+| --- | --- |
+| [JorgeCostaMacia.Http](https://www.nuget.org/packages/JorgeCostaMacia.Http/) | HTTP request/response base contracts — traceable abstract records. |
+| [JorgeCostaMacia.Http.Exception](https://www.nuget.org/packages/JorgeCostaMacia.Http.Exception/) | Maps domain / validation / bad-request exceptions to HTTP status codes. |
+| [JorgeCostaMacia.Http.Exception.Serilog](https://www.nuget.org/packages/JorgeCostaMacia.Http.Exception.Serilog/) | Serilog logging of unhandled exceptions, enriched with aggregate metadata. |
+| [JorgeCostaMacia.Http.MinimalApi.Versioning](https://www.nuget.org/packages/JorgeCostaMacia.Http.MinimalApi.Versioning/) | URL-segment API versioning for Minimal APIs. |
+| [JorgeCostaMacia.Http.OpenApi](https://www.nuget.org/packages/JorgeCostaMacia.Http.OpenApi/) | Native OpenAPI setup with RFC 7807 ProblemDetails schema enrichment. |
+| [JorgeCostaMacia.Http.ProblemDetails](https://www.nuget.org/packages/JorgeCostaMacia.Http.ProblemDetails/) | Enriched RFC 7807 ProblemDetails responses with domain metadata and per-field errors. |
+| [JorgeCostaMacia.Http.Serilog](https://www.nuget.org/packages/JorgeCostaMacia.Http.Serilog/) | Serilog request-logging middleware: body buffering, enrichment and a per-request summary. |
 
 ## Contact
 

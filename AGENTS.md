@@ -16,7 +16,7 @@ ASP.NET Core building blocks — request/response abstractions, exception handli
 
 ## Dependencies — two kinds
 
-- **Cross-repo, on shared-net** (e.g. `Http.Exception` → `JorgeCostaMacia.Exception`, `Http` → `GuidFactory`, the Serilog packages → `JorgeCostaMacia.Serilog`): these are **`PackageReference` to the published shared-net packages**, version-pinned centrally in `Directory.Packages.props`. shared-net is a separate repo — never `ProjectReference` across repos.
+- **Cross-repo, on shared-net** (e.g. `Http.Exception` → `JorgeCostaMacia.Exception`, `Http` → `GuidFactory`): these are **`PackageReference` to the published shared-net packages**, version-pinned centrally in `Directory.Packages.props`. shared-net is a separate repo — never `ProjectReference` across repos. (The logging packages depend on the public `Serilog` / `Serilog.AspNetCore`, not on `JorgeCostaMacia.Serilog`.)
 - **Intra-repo, between `Http.*` packages** (e.g. `Http.ProblemDetails` → `Http`): **`ProjectReference`**. `dotnet pack` turns each `ProjectReference` into a NuGet `<dependency>` at the sibling's version, so the graph still ships in the nuspec — but you build against local source and **release everything together** (no phased, tier-by-tier publishing). Don't reintroduce `PackageReference` between same-repo packages.
 
 ## Dependencies — Central Package Management

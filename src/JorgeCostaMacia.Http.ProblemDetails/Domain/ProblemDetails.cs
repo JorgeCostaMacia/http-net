@@ -14,7 +14,7 @@ public sealed record ProblemDetails : IResponseHttp
 {
     /// <summary>
     /// A URI reference [RFC3986] that identifies the problem type.
-    /// Defaults to "about:blank" if not present.
+    /// Per RFC 7807, a missing value is interpreted by clients as "about:blank".
     /// </summary>
     public string? Type { get; init; }
 
