@@ -1,11 +1,11 @@
+using System.Text.Json;
+using JorgeCostaMacia.Exception.Domain;
+using JorgeCostaMacia.Http.ProblemDetails.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using JorgeCostaMacia.Exception.Domain;
-using JorgeCostaMacia.Http.ProblemDetails.Infrastructure;
-using System.Text.Json;
 
 namespace JorgeCostaMacia.Http.ProblemDetails;
 

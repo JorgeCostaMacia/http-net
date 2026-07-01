@@ -1,5 +1,5 @@
-using JorgeCostaMacia.Exception.Domain;
 using System.Text.Json;
+using JorgeCostaMacia.Exception.Domain;
 
 namespace JorgeCostaMacia.Http.ProblemDetails.Infrastructure;
 

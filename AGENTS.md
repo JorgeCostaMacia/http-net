@@ -64,7 +64,10 @@ Skills that apply to this repo — let them trigger, or invoke explicitly. `gitf
 ## Build & test
 
 ```
-dotnet build http-net.slnx -c Release
-dotnet test  http-net.slnx -c Release --logger "console;verbosity=minimal"
-dotnet pack  http-net.slnx -c Release        # packs all packable; tests are IsPackable=false
+dotnet format http-net.slnx                  # apply .editorconfig (using order, whitespace) — run before committing
+dotnet build  http-net.slnx -c Release
+dotnet test   http-net.slnx -c Release --logger "console;verbosity=minimal"
+dotnet pack   http-net.slnx -c Release        # packs all packable; tests are IsPackable=false
 ```
+
+Run **`dotnet format` before committing** — it applies the `.editorconfig` (using ordering, whitespace), the CLI equivalent of Visual Studio's *Code Cleanup*, so generated code doesn't drift from what the IDE would produce.

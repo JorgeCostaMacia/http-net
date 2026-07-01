@@ -1,5 +1,5 @@
-using Microsoft.Extensions.DependencyInjection;
 using JorgeCostaMacia.Http.Exception.Serilog.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace JorgeCostaMacia.Http.Exception.Serilog;
 

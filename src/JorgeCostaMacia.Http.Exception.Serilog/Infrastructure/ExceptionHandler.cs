@@ -1,8 +1,8 @@
+using global::Serilog.Context;
+using JorgeCostaMacia.Exception.Domain;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using global::Serilog.Context;
-using JorgeCostaMacia.Exception.Domain;
 
 namespace JorgeCostaMacia.Http.Exception.Serilog.Infrastructure;
 
