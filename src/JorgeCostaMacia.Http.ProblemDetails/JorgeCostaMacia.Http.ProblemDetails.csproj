@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Description>RFC 7807 ProblemDetails responses enriched with request/trace/node ids and domain aggregate metadata, with handlers for domain and bad-request exceptions</Description>
+		<PackageTags>http,problemdetails,rfc7807,aspnetcore,error,domain</PackageTags>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<ProjectReference Include="../JorgeCostaMacia.Http/JorgeCostaMacia.Http.csproj" />
+		<PackageReference Include="JorgeCostaMacia.Exception" />
+	</ItemGroup>
+
+</Project>
