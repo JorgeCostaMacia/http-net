@@ -1,6 +1,6 @@
+using global::Serilog.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using global::Serilog.Context;
 
 namespace JorgeCostaMacia.Http.Serilog.Infrastructure;
 

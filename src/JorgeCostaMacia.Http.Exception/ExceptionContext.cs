@@ -1,6 +1,6 @@
+using JorgeCostaMacia.Exception.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using JorgeCostaMacia.Exception.Domain;
 
 namespace JorgeCostaMacia.Http.Exception;
 

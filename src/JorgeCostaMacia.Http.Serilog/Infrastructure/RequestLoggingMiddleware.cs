@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Builder;
 using global::Serilog;
 using global::Serilog.Events;
+using Microsoft.AspNetCore.Builder;
 
 namespace JorgeCostaMacia.Http.Serilog.Infrastructure;
 

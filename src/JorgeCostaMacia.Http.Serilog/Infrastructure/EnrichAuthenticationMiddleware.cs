@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Builder;
 using global::Serilog.Context;
+using Microsoft.AspNetCore.Builder;
 
 namespace JorgeCostaMacia.Http.Serilog.Infrastructure;
 
