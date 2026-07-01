@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Description>Serilog request-logging middleware for ASP.NET Core: body buffering, request/authentication log-context enrichment and a per-request summary log event</Description>
+		<PackageTags>http,serilog,logging,request,middleware,aspnetcore</PackageTags>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<PackageReference Include="Serilog.AspNetCore" />
+	</ItemGroup>
+
+</Project>

@@ -5,5 +5,6 @@
   <Project Path="src/JorgeCostaMacia.Http.MinimalApi.Versioning/JorgeCostaMacia.Http.MinimalApi.Versioning.csproj" />
   <Project Path="src/JorgeCostaMacia.Http.OpenApi/JorgeCostaMacia.Http.OpenApi.csproj" />
   <Project Path="src/JorgeCostaMacia.Http.ProblemDetails/JorgeCostaMacia.Http.ProblemDetails.csproj" />
+  <Project Path="src/JorgeCostaMacia.Http.Serilog/JorgeCostaMacia.Http.Serilog.csproj" />
   <Project Path="test/JorgeCostaMacia.Http.Tests/JorgeCostaMacia.Http.Tests.csproj" />
 </Solution>
