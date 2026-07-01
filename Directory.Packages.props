@@ -10,6 +10,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageVersion Include="Asp.Versioning.Http" Version="8.1.1" />
+		<PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.1" />
 		<PackageVersion Include="JorgeCostaMacia.Exception" Version="2.0.7" />
 		<PackageVersion Include="JorgeCostaMacia.GuidFactory" Version="2.0.7" />
 		<PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.300" />
