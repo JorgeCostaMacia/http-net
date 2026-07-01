@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Description>HTTP request/response base contracts — traceable abstract records (id, correlation id, UTC timestamp) for messages crossing the HTTP layer</Description>
+		<PackageTags>http,request,response,dto,contract,ddd</PackageTags>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="JorgeCostaMacia.GuidFactory" />
+	</ItemGroup>
+
+</Project>
