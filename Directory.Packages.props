@@ -11,10 +11,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageVersion Include="Asp.Versioning.Http" Version="10.0.0" Condition="'$(TargetFramework)' == 'net10.0'" />
-		<PackageVersion Include="Asp.Versioning.Http" Version="8.1.1" Condition="'$(TargetFramework)' != 'net10.0'" />
-		<PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="10.0.0" Condition="'$(TargetFramework)' == 'net10.0'" />
-		<PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.1" Condition="'$(TargetFramework)' != 'net10.0'" />
+		<PackageVersion Include="Asp.Versioning.Http" Version="8.1.1" />
+		<PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.1" />
 		<PackageVersion Include="JorgeCostaMacia.Exception" Version="3.0.1" />
 		<PackageVersion Include="JorgeCostaMacia.GuidFactory" Version="3.0.1" />
 		<PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.9" />
@@ -25,6 +23,13 @@
 		<PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
 		<PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
 		<PackageVersion Include="xunit.v3" Version="3.2.2" />
+	</ItemGroup>
+
+	<!-- Asp.Versioning 10 is net10-only; net8/net9 must stay on 8.1.1. Give the net10 build the latest,
+	     keep 8.1.1 for the down-level targets so the packages keep multi-targeting net8;net9;net10. -->
+	<ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+		<PackageVersion Update="Asp.Versioning.Http" Version="10.0.0" />
+		<PackageVersion Update="Asp.Versioning.Mvc.ApiExplorer" Version="10.0.0" />
 	</ItemGroup>
 
 </Project>
