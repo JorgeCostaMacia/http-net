@@ -30,7 +30,9 @@ internal static class DomainExceptionHandler
     {
         ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("AggregateId")] = exception.AggregateId;
         ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("AggregateCode")] = exception.AggregateCode;
-        ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("AggregateType")] = namingPolicy.ConvertName(exception.AggregateType.Split('.').Last());
+        // the naming policy converts JSON KEYS; the type name is a data VALUE and travels raw, so
+        // clients and log correlation (which logs it raw) always see the same spelling.
+        ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("AggregateType")] = exception.AggregateType.Split('.').Last();
 
         if (exception is ValidationException ex)
         {
