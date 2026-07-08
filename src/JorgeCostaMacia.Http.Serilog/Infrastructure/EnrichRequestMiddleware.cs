@@ -39,9 +39,14 @@ internal static class EnrichRequestContext
                     {
                         body = await reader.ReadToEndAsync();
                     }
-                    context.Request.Body.Position = 0;
                 }
                 catch { body = "[Error reading body]"; }
+                finally
+                {
+                    // always rewind — a read that failed mid-stream must not leave the endpoint's
+                    // model binding starting from wherever the read stopped.
+                    context.Request.Body.Position = 0;
+                }
             }
 
             using (LogContext.PushProperty("RequestScheme", context.Request.Scheme))
