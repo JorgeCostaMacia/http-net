@@ -66,7 +66,7 @@ Skills that apply to this repo — let them trigger, or invoke explicitly. `gitf
 ```
 dotnet format http-net.slnx                  # apply .editorconfig (using order, whitespace) — run before committing
 dotnet build  http-net.slnx -c Release
-dotnet test   http-net.slnx -c Release --logger "console;verbosity=minimal"
+dotnet test   http-net.slnx -c Release       # MTP prints a per-assembly summary; --logger is VSTest-only (MTP0001)
 dotnet pack   http-net.slnx -c Release        # packs all packable; tests are IsPackable=false
 ```
 
