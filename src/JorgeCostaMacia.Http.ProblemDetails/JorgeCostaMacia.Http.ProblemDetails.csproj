@@ -11,4 +11,8 @@
 		<PackageReference Include="JorgeCostaMacia.Exception" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="JorgeCostaMacia.Http.ProblemDetails.Tests" />
+	</ItemGroup>
+
 </Project>
