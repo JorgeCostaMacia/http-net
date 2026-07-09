@@ -11,4 +11,5 @@
   <Project Path="test/JorgeCostaMacia.Http.ProblemDetails.Tests/JorgeCostaMacia.Http.ProblemDetails.Tests.csproj" />
   <Project Path="test/JorgeCostaMacia.Http.Exception.Serilog.Tests/JorgeCostaMacia.Http.Exception.Serilog.Tests.csproj" />
   <Project Path="test/JorgeCostaMacia.Http.Exception.Tests/JorgeCostaMacia.Http.Exception.Tests.csproj" />
+  <Project Path="test/JorgeCostaMacia.Http.OpenApi.Tests/JorgeCostaMacia.Http.OpenApi.Tests.csproj" />
 </Solution>
