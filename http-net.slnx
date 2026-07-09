@@ -8,4 +8,5 @@
   <Project Path="src/JorgeCostaMacia.Http.Serilog/JorgeCostaMacia.Http.Serilog.csproj" />
   <Project Path="test/JorgeCostaMacia.Http.Tests/JorgeCostaMacia.Http.Tests.csproj" />
   <Project Path="test/JorgeCostaMacia.Http.MinimalApi.Versioning.Tests/JorgeCostaMacia.Http.MinimalApi.Versioning.Tests.csproj" />
+  <Project Path="test/JorgeCostaMacia.Http.ProblemDetails.Tests/JorgeCostaMacia.Http.ProblemDetails.Tests.csproj" />
 </Solution>
