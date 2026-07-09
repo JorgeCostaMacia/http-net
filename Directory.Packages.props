@@ -19,7 +19,6 @@
 		<PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="8.0.28" />
 		<PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.9" />
 		<PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.9" />
-		<PackageVersion Include="Serilog.Sinks.InMemory" Version="2.0.0" />
 		<!-- Pins the transitive Microsoft.OpenApi above the vulnerable 2.0.0 that AspNetCore.OpenApi pulls on net10 (GHSA-v5pm-xwqc-g5wc); inert on net8/9, which don't reference it. Needs CentralPackageTransitivePinningEnabled. -->
 		<PackageVersion Include="Microsoft.OpenApi" Version="2.7.5" />
 		<PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.300" />
