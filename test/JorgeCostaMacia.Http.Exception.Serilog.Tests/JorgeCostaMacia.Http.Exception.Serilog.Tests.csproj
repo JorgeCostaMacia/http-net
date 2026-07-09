@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<ProjectReference Include="..\..\src\JorgeCostaMacia.Http.Exception.Serilog\JorgeCostaMacia.Http.Exception.Serilog.csproj" />
+	</ItemGroup>
+
+</Project>

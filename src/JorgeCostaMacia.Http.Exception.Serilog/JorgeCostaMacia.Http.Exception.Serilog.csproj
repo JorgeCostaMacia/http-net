@@ -11,4 +11,8 @@
 		<PackageReference Include="Serilog" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="JorgeCostaMacia.Http.Exception.Serilog.Tests" />
+	</ItemGroup>
+
 </Project>
