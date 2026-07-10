@@ -32,7 +32,7 @@ using JorgeCostaMacia.Http.Domain;
 public sealed record CreateCustomerRequest(string Name)
     : RequestHttp(aggregateId: null, aggregateCorrelationId: null, aggregateOccurredAt: null);
 
-// metadata is auto-filled: AggregateId (UUIDv7 via GuidFactory),
+// metadata is auto-filled: AggregateId (via GuidFactory — UUIDv7 on .NET 9+, v4 on .NET 8),
 // AggregateCorrelationId (defaults to AggregateId), AggregateOccurredAt (UTC).
 ```
 
