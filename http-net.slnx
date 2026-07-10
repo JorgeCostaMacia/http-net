@@ -7,4 +7,10 @@
   <Project Path="src/JorgeCostaMacia.Http.ProblemDetails/JorgeCostaMacia.Http.ProblemDetails.csproj" />
   <Project Path="src/JorgeCostaMacia.Http.Serilog/JorgeCostaMacia.Http.Serilog.csproj" />
   <Project Path="test/JorgeCostaMacia.Http.Tests/JorgeCostaMacia.Http.Tests.csproj" />
+  <Project Path="test/JorgeCostaMacia.Http.MinimalApi.Versioning.Tests/JorgeCostaMacia.Http.MinimalApi.Versioning.Tests.csproj" />
+  <Project Path="test/JorgeCostaMacia.Http.ProblemDetails.Tests/JorgeCostaMacia.Http.ProblemDetails.Tests.csproj" />
+  <Project Path="test/JorgeCostaMacia.Http.Exception.Serilog.Tests/JorgeCostaMacia.Http.Exception.Serilog.Tests.csproj" />
+  <Project Path="test/JorgeCostaMacia.Http.Exception.Tests/JorgeCostaMacia.Http.Exception.Tests.csproj" />
+  <Project Path="test/JorgeCostaMacia.Http.OpenApi.Tests/JorgeCostaMacia.Http.OpenApi.Tests.csproj" />
+  <Project Path="test/JorgeCostaMacia.Http.Serilog.Tests/JorgeCostaMacia.Http.Serilog.Tests.csproj" />
 </Solution>

@@ -18,10 +18,16 @@ dotnet add package JorgeCostaMacia.Http.Exception
 ## Usage
 
 ```csharp
+builder.Services.AddProblemDetailsContext();   // or plain AddProblemDetails() — REQUIRED:
+                                               // without an IProblemDetailsService the pipeline
+                                               // throws InvalidOperationException at startup
+
 var app = builder.Build();
 
 app.UseExceptionContext();
 ```
+
+Pair it with [`JorgeCostaMacia.Http.ProblemDetails`](https://www.nuget.org/packages/JorgeCostaMacia.Http.ProblemDetails/) (`AddProblemDetailsContext()`) so the mapped status codes ship with the enriched RFC 7807 body.
 
 ## Status code mapping
 

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<!-- matches the package under test: the native OpenAPI document engine is net10-only here -->
+		<TargetFrameworks>net10.0</TargetFrameworks>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\JorgeCostaMacia.Http.OpenApi\JorgeCostaMacia.Http.OpenApi.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.TestHost" />
+	</ItemGroup>
+
+</Project>

@@ -29,6 +29,8 @@ app.UseSerilogRequestLoggingContext();       // one "Request End" event per requ
 
 The request-completion event is logged at **Error** for exceptions / 5xx, **Warning** for 4xx, and **Information** otherwise.
 
+> **Note:** the enrichment logs the **complete request body** of POST/PUT/PATCH requests, by design (structured, queryable payloads in your log store). Anything the client sends — including credentials, if your API receives them in bodies — reaches the sink, and memory usage grows with the body size, so bound requests upstream (e.g. nginx `client_max_body_size` and per-IP limits) and keep authentication in headers or an external IdP.
+
 ## Requirements
 
 One of the following SDKs: **.NET 8 / 9 / 10** *(.NET 10 recommended)*.

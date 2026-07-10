@@ -7,8 +7,19 @@
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="../JorgeCostaMacia.Http/JorgeCostaMacia.Http.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="FluentValidation" />
 		<PackageReference Include="JorgeCostaMacia.Exception" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="JorgeCostaMacia.Http.ProblemDetails.Tests" />
 	</ItemGroup>
 
 </Project>

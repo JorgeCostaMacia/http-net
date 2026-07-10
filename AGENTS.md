@@ -51,9 +51,14 @@ Use the **`gitflow` skill** for any branch/release work — never improvise.
 
 ## Relevant skills
 
-Skills that apply to this repo — let them trigger, or invoke explicitly. `gitflow` is from `jorgecostamacia-agent-skills`; the rest from `dotnet-agent-skills` (the `dotnet/skills` marketplace).
+Skills that apply to this repo — let them trigger, or invoke explicitly. `gitflow`, `solid`, `clean-architecture`, `ddd`, `testing` and `validation-net` are from `jorgecostamacia-agent-skills`; the rest from `dotnet-agent-skills` (the `dotnet/skills` marketplace).
 
 - **`gitflow`** — all branch/release work (see *Branching & releases* above).
+- **`solid`** — SOLID-principles design review; apply when shaping or reviewing the public surface of these packages (middleware, `Use`/`Add` extensions, handlers).
+- **`clean-architecture`** — layers and the inward dependency rule; these packages ARE the Presentation-side toolkit (thin delivery, transport mapping at the boundary) consumed by the bounded contexts.
+- **`ddd`** — tactical DDD; here mainly domain errors as typed exceptions with fixed codes, which this repo translates to HTTP.
+- **`testing`** — testing principles: done-means-tested, one test file per unit, names as specification, classicist doubles (the TestServer suites), rule coverage.
+- **`validation-net`** — the boundary side of the validation spec: request validators via standard FluentValidation DI, and the family `ValidationException` failure list that **`Http.ProblemDetails` renders as per-field errors** — read it before touching exception handling or ProblemDetails.
 - **`dotnet-aspnetcore`** — the core domain here (Minimal APIs, middleware, ProblemDetails, OpenAPI, exception handling, API versioning).
 - **`dotnet`** — C# language server + general .NET development.
 - **`dotnet-msbuild`** — `Directory.Build.props`, project-file quality/review, Central Package Management, build perf.
@@ -61,12 +66,14 @@ Skills that apply to this repo — let them trigger, or invoke explicitly. `gitf
 - **`dotnet-test`** / **`dotnet-test-migration`** — running/generating tests; the xUnit.v3 / MTP setup.
 - **`dotnet-upgrade`** — migrating across target-framework versions.
 
+Not relevant to this repo (skip): `dotnet-ai`, `dotnet-maui`, `dotnet-blazor`, `dotnet-data`, `dotnet-template-engine`, `dotnet11`, `dotnet-diag`, `dotnet-advanced`.
+
 ## Build & test
 
 ```
 dotnet format http-net.slnx                  # apply .editorconfig (using order, whitespace) — run before committing
 dotnet build  http-net.slnx -c Release
-dotnet test   http-net.slnx -c Release --logger "console;verbosity=minimal"
+dotnet test   http-net.slnx -c Release       # MTP prints a per-assembly summary; --logger is VSTest-only (MTP0001)
 dotnet pack   http-net.slnx -c Release        # packs all packable; tests are IsPackable=false
 ```
 

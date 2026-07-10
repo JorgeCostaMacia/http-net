@@ -47,6 +47,12 @@ internal static class BadHttpRequestExceptionHandler
                 { namingPolicy.ConvertName("Request"), ["One or more fields have an invalid data type format."] }
             };
         }
+        else
+        {
+            // an unrecognized wording (another runtime version / future rewording): keep the field
+            // present — and null — so clients can rely on it, matching the DomainException contract.
+            ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("Errors")] = null;
+        }
     }
 
     /// <summary>

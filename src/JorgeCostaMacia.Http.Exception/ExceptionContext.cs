@@ -20,6 +20,12 @@ public static class ExceptionContext
     /// (including its derived types) uses its own <see cref="DomainException.AggregateHttpCode"/>;
     /// any other exception maps to <see cref="StatusCodes.Status500InternalServerError"/>.
     /// </para>
+    /// <para>
+    /// <b>Prerequisite:</b> an <c>IProblemDetailsService</c> must be registered — call
+    /// <c>AddProblemDetailsContext()</c> (JorgeCostaMacia.Http.ProblemDetails) or plain
+    /// <c>AddProblemDetails()</c>; without it the exception-handler middleware throws an
+    /// <see cref="InvalidOperationException"/> when the pipeline is built.
+    /// </para>
     /// </summary>
     /// <param name="app">The <see cref="WebApplication"/> to configure.</param>
     /// <returns>The same <see cref="WebApplication"/> instance, to allow method chaining.</returns>

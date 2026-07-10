@@ -30,14 +30,18 @@ internal static class DomainExceptionHandler
     {
         ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("AggregateId")] = exception.AggregateId;
         ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("AggregateCode")] = exception.AggregateCode;
-        ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("AggregateType")] = namingPolicy.ConvertName(exception.AggregateType.Split('.').Last());
+        // the naming policy converts JSON KEYS; the type name is a data VALUE and travels raw, so
+        // clients and log correlation (which logs it raw) always see the same spelling.
+        ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("AggregateType")] = exception.AggregateType.Split('.').Last();
 
         if (exception is ValidationException ex)
         {
+            // group AFTER converting: two property names that collide under the policy (e.g. "Id"/"ID"
+            // -> "id") must merge into one entry instead of blowing up ToDictionary with a duplicate key.
             ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("Errors")] = ex.Validations
-                .GroupBy(x => x.PropertyName)
+                .GroupBy(x => namingPolicy.ConvertName(x.PropertyName))
                 .ToDictionary(
-                    e => namingPolicy.ConvertName(e.Key),
+                    e => e.Key,
                     e => e.Select(x => x.ErrorMessage.Replace($"'{x.PropertyName}'", $"'{namingPolicy.ConvertName(x.PropertyName)}'")).ToArray()
                 );
         }
