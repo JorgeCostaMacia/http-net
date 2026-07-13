@@ -8,4 +8,9 @@
 		<ProjectReference Include="..\..\src\JorgeCostaMacia.Http.ProblemDetails\JorgeCostaMacia.Http.ProblemDetails.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<!-- integration tests drive the real exception pipeline under TestServer -->
+		<PackageReference Include="Microsoft.AspNetCore.TestHost" />
+	</ItemGroup>
+
 </Project>

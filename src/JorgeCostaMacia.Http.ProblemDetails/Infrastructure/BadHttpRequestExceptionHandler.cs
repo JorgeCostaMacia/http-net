@@ -33,7 +33,8 @@ internal static class BadHttpRequestExceptionHandler
         {
             HandleInvalidProperties(ctx, jsonExceptionInvalid, namingPolicy);
         }
-        else if (exception.Message.Contains("Required parameter") && exception.Message.Contains("was not provided from body."))
+        else if ((exception.Message.Contains("Required parameter") && exception.Message.Contains("was not provided from body."))
+            || exception.Message.Contains("no body was provided"))
         {
             ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("Errors")] = new Dictionary<string, string[]>
             {
