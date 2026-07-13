@@ -13,6 +13,7 @@ ASP.NET Core building blocks — request/response abstractions, exception handli
 - ASP.NET Core deps via **`<FrameworkReference Include="Microsoft.AspNetCore.App" />`** (not the metapackage), so packages stay framework-aligned without pinning a runtime version.
 - Tests: **xUnit.v3 on Microsoft.Testing.Platform (MTP)** — test projects are `OutputType=Exe` + `TestingPlatformDotnetTestSupport=true`. Not MSTest, not VSTest.
 - Source is **UTF-8 without BOM** (`.editorconfig` `charset = utf-8`). camelCase locals, PascalCase types, I-prefixed interfaces. Copyright year stays **2023** (deliberate — don't bump).
+- **Explicit types everywhere — spell the type out.** Never `var`, never target-typed `new()`, never collection expressions `[]`: write `new Foo(...)`, `new byte[] { ... }`, `new List<T> { ... }`, `Array.Empty<T>()`. The `.editorconfig` sets all three to explicit, but only `var` is analyzer-enforced — `new()`/`[]` can't be flagged (the analyzer never reports the implicit form), so they are **convention, kept explicit by hand and by the IDE generating explicit**. Do not introduce `new()`/`[]` when editing. Full ruleset in `.editorconfig` (shared verbatim with the other JorgeCostaMacia.* repos).
 
 ## Dependencies — two kinds
 

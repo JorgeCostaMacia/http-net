@@ -18,11 +18,11 @@ namespace JorgeCostaMacia.Http.Exception.Serilog.Infrastructure;
 /// </remarks>
 internal sealed class ExceptionHandler : IExceptionHandler
 {
-    private readonly ILogger<ExceptionHandler> logger;
+    private readonly ILogger<ExceptionHandler> _logger;
 
     public ExceptionHandler(ILogger<ExceptionHandler> logger)
     {
-        this.logger = logger;
+        _logger = logger;
     }
 
     /// <summary>
@@ -46,11 +46,11 @@ internal sealed class ExceptionHandler : IExceptionHandler
         {
             if (exception is DomainException or BadHttpRequestException or FluentValidation.ValidationException)
             {
-                logger.LogWarning(exception, "Request Fail");
+                _logger.LogWarning(exception, "Request Fail");
             }
             else
             {
-                logger.LogError(exception, "Request Crash");
+                _logger.LogError(exception, "Request Crash");
             }
         }
 

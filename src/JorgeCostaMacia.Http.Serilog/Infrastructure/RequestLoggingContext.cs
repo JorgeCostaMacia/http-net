@@ -22,16 +22,24 @@ internal static class RequestLoggingContext
     {
         app.UseSerilogRequestLogging(options =>
         {
-            options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
-            {
-                diagnosticContext.Set("UserName", httpContext.User?.Identity?.Name ?? "anonymous");
-            };
+            options.EnrichDiagnosticContext = (diagnosticContext, httpContext) => diagnosticContext.Set("UserName", httpContext.User?.Identity?.Name ?? "anonymous");
 
             options.GetLevel = (httpContext, elapsed, ex) =>
             {
-                if (ex != null) return LogEventLevel.Error;
-                if (httpContext.Response.StatusCode > 499) return LogEventLevel.Error;
-                if (httpContext.Response.StatusCode > 399) return LogEventLevel.Warning;
+                if (ex != null)
+                {
+                    return LogEventLevel.Error;
+                }
+
+                if (httpContext.Response.StatusCode > 499)
+                {
+                    return LogEventLevel.Error;
+                }
+
+                if (httpContext.Response.StatusCode > 399)
+                {
+                    return LogEventLevel.Warning;
+                }
 
                 return LogEventLevel.Information;
             };
