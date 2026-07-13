@@ -45,6 +45,18 @@ public class BadHttpRequestExceptionHandlerTests
     }
 
     [Fact]
+    public void Handle_MissingBodyWording_Net10_MapsToRequestError()
+    {
+        // .NET 10 reworded the empty-body case to "Implicit body inferred ... but no body was provided."
+        Microsoft.AspNetCore.Http.ProblemDetailsContext ctx = Context();
+
+        BadHttpRequestExceptionHandler.Handle(ctx, new BadHttpRequestException("Implicit body inferred for parameter \"request\" but no body was provided. Did you mean to use a Service instead?"), JsonNamingPolicy.CamelCase);
+
+        Dictionary<string, string[]> errors = Assert.IsType<Dictionary<string, string[]>>(ctx.ProblemDetails.Extensions["errors"]);
+        Assert.Equal("A non-empty request body is required.", Assert.Single(errors["request"]));
+    }
+
+    [Fact]
     public void Handle_UnreadableJsonWording_MapsToRequestError()
     {
         Microsoft.AspNetCore.Http.ProblemDetailsContext ctx = Context();

@@ -13,6 +13,7 @@ ASP.NET Core building blocks — request/response abstractions, exception handli
 - ASP.NET Core deps via **`<FrameworkReference Include="Microsoft.AspNetCore.App" />`** (not the metapackage), so packages stay framework-aligned without pinning a runtime version.
 - Tests: **xUnit.v3 on Microsoft.Testing.Platform (MTP)** — test projects are `OutputType=Exe` + `TestingPlatformDotnetTestSupport=true`. Not MSTest, not VSTest.
 - Source is **UTF-8 without BOM** (`.editorconfig` `charset = utf-8`). camelCase locals, PascalCase types, I-prefixed interfaces. Copyright year stays **2023** (deliberate — don't bump).
+- **Explicit types everywhere — spell the type out.** Never `var`, never target-typed `new()`, never collection expressions `[]`: write `new Foo(...)`, `new byte[] { ... }`, `new List<T> { ... }`, `Array.Empty<T>()`. The `.editorconfig` sets all three to explicit, but only `var` is analyzer-enforced — `new()`/`[]` can't be flagged (the analyzer never reports the implicit form), so they are **convention, kept explicit by hand and by the IDE generating explicit**. Do not introduce `new()`/`[]` when editing. Full ruleset in `.editorconfig` (shared verbatim with the other JorgeCostaMacia.* repos).
 
 ## Dependencies — two kinds
 
@@ -61,6 +62,7 @@ Skills that apply to this repo — let them trigger, or invoke explicitly. `gitf
 - **`logging-net`** — the logging style for every log statement: fixed low-cardinality messages as grouping keys, all variable data via the log context, correlation ids in every scope (the `Http.Serilog` and `Http.Exception.Serilog` packages follow it — "Request End", "Request Fail" + enrichment).
 - **`validation-net`** — the boundary side of the validation spec: request validators via standard FluentValidation DI, and the family `ValidationException` failure list that **`Http.ProblemDetails` renders as per-field errors** — read it before touching exception handling or ProblemDetails.
 - **`dotnet-aspnetcore`** — the core domain here (Minimal APIs, middleware, ProblemDetails, OpenAPI, exception handling, API versioning).
+- **`dotnet-webapi`** — HTTP endpoint semantics, OpenAPI metadata, and error-handling shape for the Minimal-API surface these packages support.
 - **`dotnet`** — C# language server + general .NET development.
 - **`dotnet-msbuild`** — `Directory.Build.props`, project-file quality/review, Central Package Management, build perf.
 - **`dotnet-nuget`** — dependency management and package modernization.

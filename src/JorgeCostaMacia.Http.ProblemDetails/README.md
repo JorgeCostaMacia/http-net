@@ -23,6 +23,11 @@ builder.Services.AddProblemDetailsContext();
 
 Every error response gets `requestId`, `traceId` and `nodeId`. A `DomainException` contributes its aggregate metadata (and, for a `ValidationException`, a per-field `errors` dictionary); a `BadHttpRequestException` contributes `errors` describing missing/invalid JSON fields. All keys follow the app's configured `JsonNamingPolicy`.
 
+> **Note:** to have Minimal-API model-binding failures (missing/invalid request body) reach this handler as a `BadHttpRequestException` — instead of a bare `400` with no body — enable it on the app:
+> ```csharp
+> builder.Services.Configure<RouteHandlerOptions>(options => options.ThrowOnBadRequest = true);
+> ```
+
 The `ProblemDetails` record (implementing `IResponseHttp`) is also provided as the canonical response shape for documentation and typed clients.
 
 ## Requirements

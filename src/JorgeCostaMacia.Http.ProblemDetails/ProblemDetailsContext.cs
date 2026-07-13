@@ -16,7 +16,8 @@ public static class ProblemDetailsContext
 {
     /// <summary>
     /// Adds <c>RequestId</c>, <c>TraceId</c>, and <c>NodeId</c> to every error response, and
-    /// delegates to <see cref="DomainExceptionHandler"/> or <see cref="BadHttpRequestExceptionHandler"/>
+    /// delegates to <see cref="DomainExceptionHandler"/>, <see cref="BadHttpRequestExceptionHandler"/>,
+    /// or <see cref="FluentValidationExceptionHandler"/> (for a raw <see cref="FluentValidation.ValidationException"/>)
     /// depending on the exception type. For any other exception, sets <c>AggregateId</c>,
     /// <c>AggregateCode</c>, and <c>AggregateType</c> to <see langword="null"/>, and
     /// <c>Errors</c> to <see langword="null"/> unless the response is already a
@@ -26,9 +27,7 @@ public static class ProblemDetailsContext
     /// </summary>
     public static IServiceCollection AddProblemDetailsContext(this IServiceCollection services)
     {
-        services.AddProblemDetails(options =>
-        {
-            options.CustomizeProblemDetails = ctx =>
+        services.AddProblemDetails(options => options.CustomizeProblemDetails = ctx =>
             {
                 JsonNamingPolicy namingPolicy = ctx.HttpContext.RequestServices.GetRequiredService<IOptions<JsonOptions>>().Value.SerializerOptions.PropertyNamingPolicy ?? JsonNamingPolicy.CamelCase;
 
@@ -45,6 +44,10 @@ public static class ProblemDetailsContext
                 {
                     BadHttpRequestExceptionHandler.Handle(ctx, badHttpRequestEx, namingPolicy);
                 }
+                else if (ctx.Exception is FluentValidation.ValidationException fluentValidationEx)
+                {
+                    FluentValidationExceptionHandler.Handle(ctx, fluentValidationEx, namingPolicy);
+                }
                 else
                 {
                     ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("AggregateId")] = null;
@@ -56,8 +59,7 @@ public static class ProblemDetailsContext
                         ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("Errors")] = null;
                     }
                 }
-            };
-        });
+            });
 
         return services;
     }
