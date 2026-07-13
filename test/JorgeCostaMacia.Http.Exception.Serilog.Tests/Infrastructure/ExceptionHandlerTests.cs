@@ -13,7 +13,7 @@ public class ExceptionHandlerTests
 {
     private sealed class LoggerFake : ILogger<ExceptionHandler>
     {
-        public List<(LogLevel Level, System.Exception? Exception)> Logged { get; } = [];
+        public List<(LogLevel Level, System.Exception? Exception)> Logged { get; } = new List<(LogLevel Level, System.Exception? Exception)>();
 
         public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
 
@@ -23,7 +23,7 @@ public class ExceptionHandlerTests
             => Logged.Add((logLevel, exception));
     }
 
-    private readonly LoggerFake _logger = new();
+    private readonly LoggerFake _logger = new LoggerFake();
 
     private async Task<bool> Handle(System.Exception exception)
         => await new ExceptionHandler(_logger).TryHandleAsync(new DefaultHttpContext(), exception, TestContext.Current.CancellationToken);

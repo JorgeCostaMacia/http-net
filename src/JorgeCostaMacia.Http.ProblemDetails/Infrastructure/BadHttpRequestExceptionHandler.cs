@@ -37,14 +37,14 @@ internal static class BadHttpRequestExceptionHandler
         {
             ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("Errors")] = new Dictionary<string, string[]>
             {
-                { namingPolicy.ConvertName("Request"), ["A non-empty request body is required."] }
+                { namingPolicy.ConvertName("Request"), new string[] { "A non-empty request body is required." } }
             };
         }
         else if (exception.Message.Contains("Failed to read parameter") && exception.Message.Contains("from the request body as JSON."))
         {
             ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("Errors")] = new Dictionary<string, string[]>
             {
-                { namingPolicy.ConvertName("Request"), ["One or more fields have an invalid data type format."] }
+                { namingPolicy.ConvertName("Request"), new string[] { "One or more fields have an invalid data type format." } }
             };
         }
         else
@@ -75,14 +75,14 @@ internal static class BadHttpRequestExceptionHandler
         {
             ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("Errors")] = missings.ToDictionary(
                 field => namingPolicy.ConvertName(field),
-                field => new[] { $"'{namingPolicy.ConvertName(field)}' must be present." }
+                field => new string[] { $"'{namingPolicy.ConvertName(field)}' must be present." }
             );
         }
         else
         {
             ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("Errors")] = new Dictionary<string, string[]>
             {
-                { namingPolicy.ConvertName("Request"), ["One or more required fields are not present."] }
+                { namingPolicy.ConvertName("Request"), new string[] { "One or more required fields are not present." } }
             };
         }
     }
@@ -105,14 +105,14 @@ internal static class BadHttpRequestExceptionHandler
 
             ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("Errors")] = new Dictionary<string, string[]>
             {
-                { field, [$"'{field}' has an invalid data type format."] }
+                { field, new string[] { $"'{field}' has an invalid data type format." } }
             };
         }
         else
         {
             ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("Errors")] = new Dictionary<string, string[]>
             {
-                { namingPolicy.ConvertName("Request"), ["One or more fields have an invalid data type format."] }
+                { namingPolicy.ConvertName("Request"), new string[] { "One or more fields have an invalid data type format." } }
             };
         }
     }

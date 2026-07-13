@@ -36,14 +36,7 @@ internal static class DomainExceptionHandler
 
         if (exception is ValidationException ex)
         {
-            // group AFTER converting: two property names that collide under the policy (e.g. "Id"/"ID"
-            // -> "id") must merge into one entry instead of blowing up ToDictionary with a duplicate key.
-            ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("Errors")] = ex.Validations
-                .GroupBy(x => namingPolicy.ConvertName(x.PropertyName))
-                .ToDictionary(
-                    e => e.Key,
-                    e => e.Select(x => x.ErrorMessage.Replace($"'{x.PropertyName}'", $"'{namingPolicy.ConvertName(x.PropertyName)}'")).ToArray()
-                );
+            ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("Errors")] = ValidationErrors.Build(ex.Validations, namingPolicy);
         }
         else
         {

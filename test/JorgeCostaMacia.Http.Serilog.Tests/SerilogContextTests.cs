@@ -19,12 +19,12 @@ public class SerilogContextTests
     /// <summary>A trivial capture sink — no AsyncLocal magic, every emitted event lands here.</summary>
     private sealed class CaptureSink : ILogEventSink
     {
-        public List<LogEvent> Events { get; } = [];
+        public List<LogEvent> Events { get; } = new List<LogEvent>();
 
         public void Emit(LogEvent logEvent) => Events.Add(logEvent);
     }
 
-    private readonly CaptureSink _sink = new();
+    private readonly CaptureSink _sink = new CaptureSink();
 
     private async Task<(WebApplication App, HttpClient Client)> App()
     {
@@ -42,7 +42,7 @@ public class SerilogContextTests
         app.UseSerilogRequestLoggingContext();
         app.MapPost("/echo", async (HttpRequest request) =>
         {
-            using StreamReader reader = new(request.Body);
+            using StreamReader reader = new StreamReader(request.Body);
             return Results.Text(await reader.ReadToEndAsync());
         });
         app.MapGet("/ok", () => Results.Ok());

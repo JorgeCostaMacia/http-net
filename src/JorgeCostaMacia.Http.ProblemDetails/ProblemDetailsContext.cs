@@ -16,7 +16,8 @@ public static class ProblemDetailsContext
 {
     /// <summary>
     /// Adds <c>RequestId</c>, <c>TraceId</c>, and <c>NodeId</c> to every error response, and
-    /// delegates to <see cref="DomainExceptionHandler"/> or <see cref="BadHttpRequestExceptionHandler"/>
+    /// delegates to <see cref="DomainExceptionHandler"/>, <see cref="BadHttpRequestExceptionHandler"/>,
+    /// or <see cref="FluentValidationExceptionHandler"/> (for a raw <see cref="FluentValidation.ValidationException"/>)
     /// depending on the exception type. For any other exception, sets <c>AggregateId</c>,
     /// <c>AggregateCode</c>, and <c>AggregateType</c> to <see langword="null"/>, and
     /// <c>Errors</c> to <see langword="null"/> unless the response is already a
@@ -42,6 +43,10 @@ public static class ProblemDetailsContext
                 else if (ctx.Exception is BadHttpRequestException badHttpRequestEx)
                 {
                     BadHttpRequestExceptionHandler.Handle(ctx, badHttpRequestEx, namingPolicy);
+                }
+                else if (ctx.Exception is FluentValidation.ValidationException fluentValidationEx)
+                {
+                    FluentValidationExceptionHandler.Handle(ctx, fluentValidationEx, namingPolicy);
                 }
                 else
                 {
