@@ -16,7 +16,7 @@ public class VersioningContextTests
     [Fact]
     public void AddVersioningContext_ReturnsSameServiceCollection_ForChaining()
     {
-        ServiceCollection services = new();
+        ServiceCollection services = new ServiceCollection();
 
         Assert.Same(services, services.AddVersioningContext(Configuration()));
     }

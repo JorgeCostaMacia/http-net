@@ -62,6 +62,7 @@ Skills that apply to this repo — let them trigger, or invoke explicitly. `gitf
 - **`logging-net`** — the logging style for every log statement: fixed low-cardinality messages as grouping keys, all variable data via the log context, correlation ids in every scope (the `Http.Serilog` and `Http.Exception.Serilog` packages follow it — "Request End", "Request Fail" + enrichment).
 - **`validation-net`** — the boundary side of the validation spec: request validators via standard FluentValidation DI, and the family `ValidationException` failure list that **`Http.ProblemDetails` renders as per-field errors** — read it before touching exception handling or ProblemDetails.
 - **`dotnet-aspnetcore`** — the core domain here (Minimal APIs, middleware, ProblemDetails, OpenAPI, exception handling, API versioning).
+- **`dotnet-webapi`** — HTTP endpoint semantics, OpenAPI metadata, and error-handling shape for the Minimal-API surface these packages support.
 - **`dotnet`** — C# language server + general .NET development.
 - **`dotnet-msbuild`** — `Directory.Build.props`, project-file quality/review, Central Package Management, build perf.
 - **`dotnet-nuget`** — dependency management and package modernization.
