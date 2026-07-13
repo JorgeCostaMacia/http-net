@@ -1,6 +1,7 @@
 using global::Serilog.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 
 namespace JorgeCostaMacia.Http.Serilog.Infrastructure;
 
@@ -55,8 +56,8 @@ internal static class EnrichRequestContext
             using (LogContext.PushProperty("RequestContentType", context.Request.ContentType ?? string.Empty))
             using (LogContext.PushProperty("RequestQueryString", context.Request.QueryString.Value ?? string.Empty))
             using (LogContext.PushProperty("RequestBody", body))
-            using (LogContext.PushProperty("UserAgent", context.Request.Headers.TryGetValue("User-Agent", out var userAgent) ? !string.IsNullOrEmpty(userAgent) ? userAgent.ToString() : "unknown" : "unknown"))
-            using (LogContext.PushProperty("XRequestId", context.Request.Headers.TryGetValue("X-Request-ID", out var xRequestId) ? !string.IsNullOrEmpty(xRequestId) ? xRequestId.ToString() : "unknown" : "unknown"))
+            using (LogContext.PushProperty("UserAgent", context.Request.Headers.TryGetValue("User-Agent", out StringValues userAgent) ? !string.IsNullOrEmpty(userAgent) ? userAgent.ToString() : "unknown" : "unknown"))
+            using (LogContext.PushProperty("XRequestId", context.Request.Headers.TryGetValue("X-Request-ID", out StringValues xRequestId) ? !string.IsNullOrEmpty(xRequestId) ? xRequestId.ToString() : "unknown" : "unknown"))
             {
                 await next();
             }

@@ -26,9 +26,7 @@ public static class ProblemDetailsContext
     /// </summary>
     public static IServiceCollection AddProblemDetailsContext(this IServiceCollection services)
     {
-        services.AddProblemDetails(options =>
-        {
-            options.CustomizeProblemDetails = ctx =>
+        services.AddProblemDetails(options => options.CustomizeProblemDetails = ctx =>
             {
                 JsonNamingPolicy namingPolicy = ctx.HttpContext.RequestServices.GetRequiredService<IOptions<JsonOptions>>().Value.SerializerOptions.PropertyNamingPolicy ?? JsonNamingPolicy.CamelCase;
 
@@ -56,8 +54,7 @@ public static class ProblemDetailsContext
                         ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("Errors")] = null;
                     }
                 }
-            };
-        });
+            });
 
         return services;
     }

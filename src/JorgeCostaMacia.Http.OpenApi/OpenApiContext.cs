@@ -26,9 +26,7 @@ public static class OpenApiContext
     /// </remarks>
     public static IServiceCollection AddOpenApiContext(this IServiceCollection services)
     {
-        services.AddOpenApi(options =>
-        {
-            options.AddSchemaTransformer((schema, context, cancellationToken) =>
+        services.AddOpenApi(options => options.AddSchemaTransformer((schema, context, cancellationToken) =>
             {
                 if (context.JsonTypeInfo.Type == typeof(Microsoft.AspNetCore.Mvc.ProblemDetails))
                 {
@@ -57,8 +55,7 @@ public static class OpenApiContext
                 }
 
                 return Task.CompletedTask;
-            });
-        });
+            }));
 
         return services;
     }

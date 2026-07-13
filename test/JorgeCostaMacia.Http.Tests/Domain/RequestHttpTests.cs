@@ -10,8 +10,8 @@ public class RequestHttpTests
     [Fact]
     public void Defaults_generate_id_correlation_and_utc_timestamp()
     {
-        var before = DateTime.UtcNow;
-        var request = new TestRequest(null, null, null);
+        DateTime before = DateTime.UtcNow;
+        TestRequest request = new TestRequest(null, null, null);
 
         Assert.NotEqual(Guid.Empty, request.AggregateId);
         Assert.Equal(request.AggregateId, request.AggregateCorrelationId);
@@ -23,9 +23,9 @@ public class RequestHttpTests
     [Fact]
     public void Correlation_defaults_to_the_supplied_id()
     {
-        var id = Guid.NewGuid();
+        Guid id = Guid.NewGuid();
 
-        var request = new TestRequest(id, null, null);
+        TestRequest request = new TestRequest(id, null, null);
 
         Assert.Equal(id, request.AggregateCorrelationId);
     }
@@ -33,11 +33,11 @@ public class RequestHttpTests
     [Fact]
     public void Keeps_supplied_values()
     {
-        var id = Guid.NewGuid();
-        var correlation = Guid.NewGuid();
-        var occurredAt = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        Guid id = Guid.NewGuid();
+        Guid correlation = Guid.NewGuid();
+        DateTime occurredAt = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-        var request = new TestRequest(id, correlation, occurredAt);
+        TestRequest request = new TestRequest(id, correlation, occurredAt);
 
         Assert.Equal(id, request.AggregateId);
         Assert.Equal(correlation, request.AggregateCorrelationId);
