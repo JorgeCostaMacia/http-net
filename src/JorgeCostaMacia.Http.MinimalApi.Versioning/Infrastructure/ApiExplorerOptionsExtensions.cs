@@ -11,7 +11,7 @@ namespace JorgeCostaMacia.Http.MinimalApi.Versioning.Infrastructure;
 public static class ApiExplorerOptionsExtensions
 {
     /// <summary>The group-name format <see cref="WithDefaults"/> applies when none is given: <c>'v'V</c> (e.g. <c>v1</c>).</summary>
-    public const string DefaultGroupNameFormat = "'v'V";
+    private const string DefaultGroupNameFormat = "'v'V";
 
     /// <summary>
     /// Applies the default API-explorer policy: the <paramref name="groupNameFormat"/> group-name format

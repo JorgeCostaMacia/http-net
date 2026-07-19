@@ -11,7 +11,7 @@ namespace JorgeCostaMacia.Http.MinimalApi.Versioning.Infrastructure;
 public static class ApiVersioningOptionsExtensions
 {
     /// <summary>The major API version <see cref="WithDefaults"/> assumes when no major is given (or it is <see langword="null"/>).</summary>
-    public const int DefaultMajorVersion = 1;
+    private const int DefaultMajorVersion = 1;
 
     /// <summary>
     /// Applies the default versioning policy: <paramref name="majorVersion"/>.<paramref name="minorVersion"/>
