@@ -10,7 +10,8 @@ namespace JorgeCostaMacia.Http.MinimalApi.Versioning.Infrastructure;
 /// </summary>
 public static class ApiVersioningOptionsExtensions
 {
-    private const int DefaultVersion = 1;
+    /// <summary>The API version <see cref="WithDefaults"/> assumes when called without one (or with <see langword="null"/>).</summary>
+    public const int DefaultVersion = 1;
 
     /// <summary>
     /// Applies the default versioning policy: <paramref name="apiVersion"/> as the default version
