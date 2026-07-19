@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<!-- net10-only: uses the native Microsoft.AspNetCore.OpenApi (10.x) generation pipeline -->
 		<TargetFrameworks>net10.0</TargetFrameworks>
-		<Description>Native .NET OpenAPI setup with RFC 7807 ProblemDetails schema enrichment (errors, requestId, traceId, aggregate metadata)</Description>
+		<Description>RFC 7807 ProblemDetails schema transformer for native .NET OpenAPI (errors, requestId, traceId, aggregate metadata), applied from the host's AddOpenApi</Description>
 		<PackageTags>http,openapi,swagger,problemdetails,aspnetcore,schema</PackageTags>
 	</PropertyGroup>
 
