@@ -10,6 +10,8 @@ namespace JorgeCostaMacia.Http.MinimalApi.Versioning.Infrastructure;
 /// </summary>
 public static class ApiVersioningOptionsExtensions
 {
+    private const int DefaultVersion = 1;
+
     /// <summary>
     /// Applies the default versioning policy: <paramref name="apiVersion"/> as the default version
     /// (the one assumed when a request does not specify one — not the only supported version; endpoints
@@ -18,11 +20,14 @@ public static class ApiVersioningOptionsExtensions
     /// and the version read from a URL segment (<see cref="UrlSegmentApiVersionReader"/>).
     /// </summary>
     /// <param name="options">The options to configure.</param>
-    /// <param name="apiVersion">The major API version to assume as the default; defaults to <c>1</c>.</param>
+    /// <param name="apiVersion">
+    /// The major API version to assume as the default; <see langword="null"/> (or omitted) falls back to
+    /// <c>1</c>, so an <c>IConfiguration.GetValue&lt;int?&gt;("ApiVersion")</c> can be passed straight in.
+    /// </param>
     /// <returns>The same <paramref name="options"/>, for chaining.</returns>
-    public static ApiVersioningOptions WithDefaults(this ApiVersioningOptions options, int apiVersion = 1)
+    public static ApiVersioningOptions WithDefaults(this ApiVersioningOptions options, int? apiVersion = null)
     {
-        options.DefaultApiVersion = new ApiVersion(apiVersion);
+        options.DefaultApiVersion = new ApiVersion(apiVersion ?? DefaultVersion);
         options.ReportApiVersions = true;
         options.AssumeDefaultVersionWhenUnspecified = true;
         options.ApiVersionReader = new UrlSegmentApiVersionReader();
