@@ -1,7 +1,7 @@
-using JorgeCostaMacia.Http.Serilog.Infrastructure;
+using JorgeCostaMacia.Http.Serilog.Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Http;
 
-namespace JorgeCostaMacia.Http.Serilog.Tests.Infrastructure;
+namespace JorgeCostaMacia.Http.Serilog.Tests.Infrastructure.Middlewares;
 
 public class BodyBufferMiddlewareTests
 {

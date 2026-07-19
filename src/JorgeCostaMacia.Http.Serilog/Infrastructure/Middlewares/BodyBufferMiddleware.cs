@@ -1,7 +1,6 @@
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
-namespace JorgeCostaMacia.Http.Serilog.Infrastructure;
+namespace JorgeCostaMacia.Http.Serilog.Infrastructure.Middlewares;
 
 /// <summary>
 /// Middleware that enables request body buffering so the body can be read more than once during the
@@ -32,16 +31,4 @@ public sealed class BodyBufferMiddleware
 
         await _next(context);
     }
-}
-
-/// <summary>Registers <see cref="BodyBufferMiddleware"/> in the request pipeline.</summary>
-public static class BodyBufferMiddlewareExtensions
-{
-    /// <summary>
-    /// Adds <see cref="BodyBufferMiddleware"/> to the request pipeline.
-    /// </summary>
-    /// <param name="app">The <see cref="WebApplication"/> to configure.</param>
-    /// <returns>The <see cref="IApplicationBuilder"/>, to allow method chaining.</returns>
-    public static IApplicationBuilder UseBodyBufferMiddleware(this WebApplication app) =>
-        app.UseMiddleware<BodyBufferMiddleware>();
 }
