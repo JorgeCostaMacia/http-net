@@ -1,25 +1,32 @@
-using global::Serilog.Context;
 using JorgeCostaMacia.Exception.Domain;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Serilog.Context;
 
 namespace JorgeCostaMacia.Http.Exception.Serilog.Infrastructure;
 
 /// <summary>
 /// Logs every unhandled exception that reaches the exception handling pipeline, enriched with
 /// aggregate metadata (for a <see cref="DomainException"/>) and the authenticated user's name.
+/// Register it from the host's <c>Program</c> with <c>AddExceptionHandler&lt;ExceptionHandler&gt;()</c>.
 /// </summary>
 /// <remarks>
 /// Always returns <see langword="false"/>, since this handler only logs as a side effect and
-/// never produces the response itself — that remains the responsibility of
-/// <c>ExceptionContext</c>'s status code mapping, which runs after this handler in the
-/// <see cref="IExceptionHandler"/> chain.
+/// never produces the response itself — that remains the responsibility of the status-code mapping
+/// (<c>ExceptionHandlerOptionsExtensions.WithDefaultStatusCodes</c>), which runs after this handler in
+/// the <see cref="IExceptionHandler"/> chain. The aggregate properties are pushed for every exception
+/// (null for a non-<see cref="DomainException"/>) on purpose, so every log entry carries a consistent
+/// schema.
 /// </remarks>
-internal sealed class ExceptionHandler : IExceptionHandler
+public sealed class ExceptionHandler : IExceptionHandler
 {
     private readonly ILogger<ExceptionHandler> _logger;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ExceptionHandler"/> class.
+    /// </summary>
+    /// <param name="logger">The logger used to record each unhandled exception.</param>
     public ExceptionHandler(ILogger<ExceptionHandler> logger)
     {
         _logger = logger;

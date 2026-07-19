@@ -1,7 +1,7 @@
 using System.Text.Json;
 using FluentValidation.Results;
 
-namespace JorgeCostaMacia.Http.ProblemDetails.Infrastructure;
+namespace JorgeCostaMacia.Http.ProblemDetails.Infrastructure.Helpers;
 
 /// <summary>
 /// Builds the ProblemDetails <c>Errors</c> extension from a set of <see cref="ValidationFailure"/>,
@@ -9,7 +9,7 @@ namespace JorgeCostaMacia.Http.ProblemDetails.Infrastructure;
 /// each message) through the application's naming policy — so validation responses keep the same
 /// casing as the rest of the API's JSON.
 /// </summary>
-internal static class ValidationErrors
+internal static class ValidationErrorsHelper
 {
     /// <summary>
     /// Groups <paramref name="failures"/> by property name (after applying <paramref name="namingPolicy"/>,

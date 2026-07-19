@@ -1,7 +1,8 @@
 using System.Text.Json;
 using JorgeCostaMacia.Exception.Domain;
+using JorgeCostaMacia.Http.ProblemDetails.Infrastructure.Helpers;
 
-namespace JorgeCostaMacia.Http.ProblemDetails.Infrastructure;
+namespace JorgeCostaMacia.Http.ProblemDetails.Infrastructure.Handlers;
 
 /// <summary>
 /// Enriches the <see cref="Microsoft.AspNetCore.Http.ProblemDetailsContext"/> for a
@@ -36,7 +37,7 @@ internal static class DomainExceptionHandler
 
         if (exception is ValidationException ex)
         {
-            ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("Errors")] = ValidationErrors.Build(ex.Validations, namingPolicy);
+            ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("Errors")] = ValidationErrorsHelper.Build(ex.Validations, namingPolicy);
         }
         else
         {

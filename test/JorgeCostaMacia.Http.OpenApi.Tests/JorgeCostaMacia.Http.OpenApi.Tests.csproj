@@ -3,6 +3,10 @@
 	<PropertyGroup>
 		<!-- matches the package under test: the native OpenAPI document engine is net10-only here -->
 		<TargetFrameworks>net10.0</TargetFrameworks>
+		<!-- the test now calls AddOpenApi directly (like a host), which runs the OpenAPI XML-comment
+		     source generator here; Microsoft.AspNetCore.OpenApi arrives transitively so its build props
+		     don't auto-register the interceptor namespace — declare it so the generated interceptors compile. -->
+		<InterceptorsNamespaces>$(InterceptorsNamespaces);Microsoft.AspNetCore.OpenApi.Generated</InterceptorsNamespaces>
 	</PropertyGroup>
 
 	<ItemGroup>

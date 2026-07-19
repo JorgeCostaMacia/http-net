@@ -1,10 +1,10 @@
 using System.Text.Json;
 using FluentValidation.Results;
 using JorgeCostaMacia.Exception.Domain;
-using JorgeCostaMacia.Http.ProblemDetails.Infrastructure;
+using JorgeCostaMacia.Http.ProblemDetails.Infrastructure.Handlers;
 using Microsoft.AspNetCore.Http;
 
-namespace JorgeCostaMacia.Http.ProblemDetails.Tests.Infrastructure;
+namespace JorgeCostaMacia.Http.ProblemDetails.Tests.Infrastructure.Handlers;
 
 file sealed class TestDomainException(string? message = null)
     : DomainException(null, null, null, null, null, message, null);

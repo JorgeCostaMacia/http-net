@@ -1,17 +1,16 @@
-using System.Net;
 using System.Text;
 using System.Text.Json;
 using FluentValidation.Results;
 using JorgeCostaMacia.Exception.Domain;
+using JorgeCostaMacia.Http.ProblemDetails.Infrastructure;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace JorgeCostaMacia.Http.ProblemDetails.Tests;
+namespace JorgeCostaMacia.Http.ProblemDetails.Tests.Infrastructure;
 
 // concrete subclasses: the family exceptions carry protected ctors (one per aggregate in real code).
 file sealed class TestDomainException() : DomainException(null, null, null, null, null, "boom", null);
@@ -24,15 +23,15 @@ file sealed class TestValidationException()
 file sealed record Payload(int Value);
 
 /// <summary>
-/// End-to-end tests over <see cref="ProblemDetailsContext.AddProblemDetailsContext"/> through the real
+/// End-to-end tests over <see cref="ProblemDetailsOptionsExtensions.WithDefaults"/> through the real
 /// ASP.NET Core exception pipeline (<c>UseExceptionHandler</c> → <c>IProblemDetailsService</c> → the
 /// configured <see cref="JsonSerializerOptions"/>). This is the only place the emitted RFC 7807 body is
 /// provable: the unit tests call the handlers directly and never exercise the middleware, the
 /// <c>RequestId</c>/<c>TraceId</c>/<c>NodeId</c> enrichment, or JSON-key casing under a live policy.
-/// The HTTP status itself is <c>ExceptionContext</c>'s contract, asserted in Http.Exception.Tests — here
+/// The HTTP status itself is the exception-handler's contract, asserted in Http.Exception.Tests — here
 /// every unhandled exception surfaces as the pipeline default, so only the body is under test.
 /// </summary>
-public class ProblemDetailsContextIntegrationTests
+public class ProblemDetailsOptionsExtensionsIntegrationTests
 {
     private static async Task<(WebApplication App, HttpClient Client)> App()
     {
@@ -47,7 +46,7 @@ public class ProblemDetailsContextIntegrationTests
             options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
             options.SerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.SnakeCaseLower;
         });
-        builder.Services.AddProblemDetailsContext();
+        builder.Services.AddProblemDetails(options => options.WithDefaults());
         // minimal-API binding failures return a bare 400 unless this is set — only then do they throw a
         // BadHttpRequestException that reaches the pipeline and gets a ProblemDetails body.
         builder.Services.Configure<RouteHandlerOptions>(options => options.ThrowOnBadRequest = true);
