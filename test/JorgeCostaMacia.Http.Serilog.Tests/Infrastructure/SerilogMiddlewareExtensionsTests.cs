@@ -3,6 +3,7 @@ using System.Text;
 using global::Serilog;
 using global::Serilog.Core;
 using global::Serilog.Events;
+using JorgeCostaMacia.Http.Serilog.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -12,9 +13,9 @@ using Microsoft.Extensions.Logging;
 
 // 'Serilog' (the third-party namespace) is referenced with global:: so it isn't shadowed by the
 // enclosing 'JorgeCostaMacia.Http.Serilog' package namespace in test code.
-namespace JorgeCostaMacia.Http.Serilog.Tests;
+namespace JorgeCostaMacia.Http.Serilog.Tests.Infrastructure;
 
-public class SerilogContextTests
+public class SerilogMiddlewareExtensionsTests
 {
     /// <summary>A trivial capture sink — no AsyncLocal magic, every emitted event lands here.</summary>
     private sealed class CaptureSink : ILogEventSink
@@ -36,10 +37,10 @@ public class SerilogContextTests
         builder.Services.AddSerilog();   // registers the static logger above (the middleware's fallback too)
 
         WebApplication app = builder.Build();
-        app.UseSerilogBodyBufferContext();
-        app.UseSerilogEnrichRequestContext();
-        app.UseSerilogEnrichAuthenticationContext();
-        app.UseSerilogRequestLoggingContext();
+        app.UseSerilogBodyBuffer();
+        app.UseSerilogEnrichRequest();
+        app.UseSerilogEnrichAuthentication();
+        app.UseSerilogRequestSummary();
         app.MapPost("/echo", async (HttpRequest request) =>
         {
             using StreamReader reader = new StreamReader(request.Body);
