@@ -1,5 +1,5 @@
-using global::Serilog.Context;
 using Microsoft.AspNetCore.Http;
+using Serilog.Context;
 
 namespace JorgeCostaMacia.Http.Serilog.Infrastructure.Middlewares;
 

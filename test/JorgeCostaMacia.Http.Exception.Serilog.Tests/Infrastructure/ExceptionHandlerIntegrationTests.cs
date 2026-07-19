@@ -1,14 +1,12 @@
-using global::Serilog;
-using global::Serilog.Core;
-using global::Serilog.Events;
 using JorgeCostaMacia.Exception.Domain;
 using JorgeCostaMacia.Http.Exception.Serilog.Infrastructure;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Core;
+using Serilog.Events;
 
 namespace JorgeCostaMacia.Http.Exception.Serilog.Tests.Infrastructure;
 

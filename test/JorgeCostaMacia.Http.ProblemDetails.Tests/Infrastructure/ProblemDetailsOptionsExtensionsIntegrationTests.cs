@@ -1,11 +1,9 @@
-using System.Net;
 using System.Text;
 using System.Text.Json;
 using FluentValidation.Results;
 using JorgeCostaMacia.Exception.Domain;
 using JorgeCostaMacia.Http.ProblemDetails.Infrastructure;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
