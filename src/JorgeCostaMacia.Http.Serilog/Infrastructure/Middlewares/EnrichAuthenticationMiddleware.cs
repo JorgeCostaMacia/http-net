@@ -1,8 +1,7 @@
 using global::Serilog.Context;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
-namespace JorgeCostaMacia.Http.Serilog.Infrastructure;
+namespace JorgeCostaMacia.Http.Serilog.Infrastructure.Middlewares;
 
 /// <summary>
 /// Middleware that enriches the Serilog <see cref="LogContext"/> with the authenticated user's name for
@@ -11,9 +10,9 @@ namespace JorgeCostaMacia.Http.Serilog.Infrastructure;
 /// <remarks>
 /// Must be registered after authentication middleware (e.g. <c>app.UseAuthentication()</c>) so the user
 /// is already populated on the request. Only enriches the ambient log context for events emitted after
-/// this point; the final Serilog request-completion event is enriched separately by
-/// <see cref="RequestLoggingOptionsExtensions"/>, since by the time that event is logged this middleware's
-/// scope has already closed.
+/// this point; the final Serilog request-completion event is enriched separately by the request-logging
+/// options (see <c>RequestLoggingOptionsExtensions</c>), since by the time that event is logged this
+/// middleware's scope has already closed.
 /// </remarks>
 public sealed class EnrichAuthenticationMiddleware
 {
@@ -41,16 +40,4 @@ public sealed class EnrichAuthenticationMiddleware
             await _next(context);
         }
     }
-}
-
-/// <summary>Registers <see cref="EnrichAuthenticationMiddleware"/> in the request pipeline.</summary>
-public static class EnrichAuthenticationMiddlewareExtensions
-{
-    /// <summary>
-    /// Adds <see cref="EnrichAuthenticationMiddleware"/> to the request pipeline.
-    /// </summary>
-    /// <param name="app">The <see cref="WebApplication"/> to configure.</param>
-    /// <returns>The <see cref="IApplicationBuilder"/>, to allow method chaining.</returns>
-    public static IApplicationBuilder UseEnrichAuthenticationMiddleware(this WebApplication app) =>
-        app.UseMiddleware<EnrichAuthenticationMiddleware>();
 }
