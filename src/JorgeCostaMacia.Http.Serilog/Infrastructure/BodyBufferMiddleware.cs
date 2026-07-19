@@ -5,22 +5,43 @@ namespace JorgeCostaMacia.Http.Serilog.Infrastructure;
 
 /// <summary>
 /// Middleware that enables request body buffering so the body can be read more than once during the
-/// request pipeline.
+/// request pipeline (e.g. by <see cref="EnrichRequestMiddleware"/> to log the body without consuming it
+/// for the endpoint).
 /// </summary>
-public static class BodyBufferMiddleware
+public sealed class BodyBufferMiddleware
+{
+    private readonly RequestDelegate _next;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BodyBufferMiddleware"/> class.
+    /// </summary>
+    /// <param name="next">The next middleware in the pipeline.</param>
+    public BodyBufferMiddleware(RequestDelegate next)
+    {
+        _next = next;
+    }
+
+    /// <summary>
+    /// Enables buffering on the current request, then invokes the rest of the pipeline.
+    /// </summary>
+    /// <param name="context">The current <see cref="HttpContext"/>.</param>
+    /// <returns>A task that completes when the rest of the pipeline has run.</returns>
+    public async Task InvokeAsync(HttpContext context)
+    {
+        context.Request.EnableBuffering();
+
+        await _next(context);
+    }
+}
+
+/// <summary>Registers <see cref="BodyBufferMiddleware"/> in the request pipeline.</summary>
+public static class BodyBufferMiddlewareExtensions
 {
     /// <summary>
-    /// Enables buffering on every request, allowing downstream middleware (see
-    /// <see cref="EnrichRequestMiddleware"/>) to read the request body without consuming it for the
-    /// endpoint.
+    /// Adds <see cref="BodyBufferMiddleware"/> to the request pipeline.
     /// </summary>
     /// <param name="app">The <see cref="WebApplication"/> to configure.</param>
-    /// <returns>The same <see cref="WebApplication"/> instance, to allow method chaining.</returns>
-    public static WebApplication UseBodyBufferMiddleware(this WebApplication app) =>
-        (WebApplication)app.Use(async (context, next) =>
-        {
-            context.Request.EnableBuffering();
-
-            await next();
-        });
+    /// <returns>The <see cref="IApplicationBuilder"/>, to allow method chaining.</returns>
+    public static IApplicationBuilder UseBodyBufferMiddleware(this WebApplication app) =>
+        app.UseMiddleware<BodyBufferMiddleware>();
 }

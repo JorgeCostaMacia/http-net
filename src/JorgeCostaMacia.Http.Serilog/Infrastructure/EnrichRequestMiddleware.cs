@@ -17,47 +17,70 @@ namespace JorgeCostaMacia.Http.Serilog.Infrastructure;
 /// middleware and the endpoint can still read it; if reading fails for any reason, the body is reported
 /// as <c>"[Error reading body]"</c> instead of throwing.
 /// </remarks>
-public static class EnrichRequestMiddleware
+public sealed class EnrichRequestMiddleware
+{
+    private readonly RequestDelegate _next;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EnrichRequestMiddleware"/> class.
+    /// </summary>
+    /// <param name="next">The next middleware in the pipeline.</param>
+    public EnrichRequestMiddleware(RequestDelegate next)
+    {
+        _next = next;
+    }
+
+    /// <summary>
+    /// Reads the request body (when applicable), pushes the request diagnostic properties onto the
+    /// <see cref="LogContext"/>, then invokes the rest of the pipeline within that scope.
+    /// </summary>
+    /// <param name="context">The current <see cref="HttpContext"/>.</param>
+    /// <returns>A task that completes when the rest of the pipeline has run.</returns>
+    public async Task InvokeAsync(HttpContext context)
+    {
+        string body = string.Empty;
+
+        if ((HttpMethods.IsPost(context.Request.Method) || HttpMethods.IsPut(context.Request.Method) || HttpMethods.IsPatch(context.Request.Method)) && context.Request.ContentLength > 0 && context.Request.Body.CanSeek)
+        {
+            try
+            {
+                context.Request.Body.Position = 0;
+                using (StreamReader reader = new StreamReader(context.Request.Body, leaveOpen: true))
+                {
+                    body = await reader.ReadToEndAsync();
+                }
+            }
+            catch { body = "[Error reading body]"; }
+            finally
+            {
+                // always rewind — a read that failed mid-stream must not leave the endpoint's
+                // model binding starting from wherever the read stopped.
+                context.Request.Body.Position = 0;
+            }
+        }
+
+        using (LogContext.PushProperty("RequestScheme", context.Request.Scheme))
+        using (LogContext.PushProperty("RequestHost", context.Request.Host.Value))
+        using (LogContext.PushProperty("RequestIp", context.Connection.RemoteIpAddress?.ToString() ?? "unknown"))
+        using (LogContext.PushProperty("RequestContentType", context.Request.ContentType ?? string.Empty))
+        using (LogContext.PushProperty("RequestQueryString", context.Request.QueryString.Value ?? string.Empty))
+        using (LogContext.PushProperty("RequestBody", body))
+        using (LogContext.PushProperty("UserAgent", context.Request.Headers.TryGetValue("User-Agent", out StringValues userAgent) ? !string.IsNullOrEmpty(userAgent) ? userAgent.ToString() : "unknown" : "unknown"))
+        using (LogContext.PushProperty("XRequestId", context.Request.Headers.TryGetValue("X-Request-ID", out StringValues xRequestId) ? !string.IsNullOrEmpty(xRequestId) ? xRequestId.ToString() : "unknown" : "unknown"))
+        {
+            await _next(context);
+        }
+    }
+}
+
+/// <summary>Registers <see cref="EnrichRequestMiddleware"/> in the request pipeline.</summary>
+public static class EnrichRequestMiddlewareExtensions
 {
     /// <summary>
-    /// Registers the middleware described in the type-level remarks.
+    /// Adds <see cref="EnrichRequestMiddleware"/> to the request pipeline.
     /// </summary>
     /// <param name="app">The <see cref="WebApplication"/> to configure.</param>
-    /// <returns>The same <see cref="WebApplication"/> instance, to allow method chaining.</returns>
-    public static WebApplication UseEnrichRequestMiddleware(this WebApplication app) =>
-        (WebApplication)app.Use(async (context, next) =>
-        {
-            string body = string.Empty;
-
-            if ((HttpMethods.IsPost(context.Request.Method) || HttpMethods.IsPut(context.Request.Method) || HttpMethods.IsPatch(context.Request.Method)) && context.Request.ContentLength > 0 && context.Request.Body.CanSeek)
-            {
-                try
-                {
-                    context.Request.Body.Position = 0;
-                    using (StreamReader reader = new StreamReader(context.Request.Body, leaveOpen: true))
-                    {
-                        body = await reader.ReadToEndAsync();
-                    }
-                }
-                catch { body = "[Error reading body]"; }
-                finally
-                {
-                    // always rewind — a read that failed mid-stream must not leave the endpoint's
-                    // model binding starting from wherever the read stopped.
-                    context.Request.Body.Position = 0;
-                }
-            }
-
-            using (LogContext.PushProperty("RequestScheme", context.Request.Scheme))
-            using (LogContext.PushProperty("RequestHost", context.Request.Host.Value))
-            using (LogContext.PushProperty("RequestIp", context.Connection.RemoteIpAddress?.ToString() ?? "unknown"))
-            using (LogContext.PushProperty("RequestContentType", context.Request.ContentType ?? string.Empty))
-            using (LogContext.PushProperty("RequestQueryString", context.Request.QueryString.Value ?? string.Empty))
-            using (LogContext.PushProperty("RequestBody", body))
-            using (LogContext.PushProperty("UserAgent", context.Request.Headers.TryGetValue("User-Agent", out StringValues userAgent) ? !string.IsNullOrEmpty(userAgent) ? userAgent.ToString() : "unknown" : "unknown"))
-            using (LogContext.PushProperty("XRequestId", context.Request.Headers.TryGetValue("X-Request-ID", out StringValues xRequestId) ? !string.IsNullOrEmpty(xRequestId) ? xRequestId.ToString() : "unknown" : "unknown"))
-            {
-                await next();
-            }
-        });
+    /// <returns>The <see cref="IApplicationBuilder"/>, to allow method chaining.</returns>
+    public static IApplicationBuilder UseEnrichRequestMiddleware(this WebApplication app) =>
+        app.UseMiddleware<EnrichRequestMiddleware>();
 }
