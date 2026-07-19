@@ -18,7 +18,9 @@ dotnet add package JorgeCostaMacia.Http.ProblemDetails
 ## Usage
 
 ```csharp
-builder.Services.AddProblemDetailsContext();
+using JorgeCostaMacia.Http.ProblemDetails.Infrastructure;
+
+builder.Services.AddProblemDetails(options => options.WithDefaults());
 ```
 
 Every error response gets `requestId`, `traceId` and `nodeId`. A `DomainException` contributes its aggregate metadata (and, for a `ValidationException`, a per-field `errors` dictionary); a `BadHttpRequestException` contributes `errors` describing missing/invalid JSON fields. All keys follow the app's configured `JsonNamingPolicy`.

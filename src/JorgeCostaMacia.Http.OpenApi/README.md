@@ -1,6 +1,6 @@
 # JorgeCostaMacia.Http.OpenApi
 
-**Native OpenAPI setup with RFC 7807 enrichment** — one call configures .NET's built-in OpenAPI generation and augments the ProblemDetails schemas with `errors`, `requestId`, `traceId`, `nodeId` and domain aggregate metadata, so your API docs match the error shape your services actually return.
+**RFC 7807 schema transformer for native OpenAPI** — a schema transformer for .NET's built-in OpenAPI generation that augments the ProblemDetails schemas with `errors`, `requestId`, `traceId`, `nodeId` and domain aggregate metadata, so your API docs match the error shape your services actually return.
 
 [![NuGet](https://img.shields.io/nuget/v/JorgeCostaMacia.Http.OpenApi.svg)](https://www.nuget.org/packages/JorgeCostaMacia.Http.OpenApi/)
 [![Downloads](https://img.shields.io/nuget/dt/JorgeCostaMacia.Http.OpenApi.svg)](https://www.nuget.org/packages/JorgeCostaMacia.Http.OpenApi/)
@@ -18,10 +18,13 @@ dotnet add package JorgeCostaMacia.Http.OpenApi
 ## Usage
 
 ```csharp
-builder.Services.AddOpenApiContext();
+using JorgeCostaMacia.Http.OpenApi.Infrastructure;
+using Microsoft.AspNetCore.OpenApi;
+
+builder.Services.AddOpenApi(options => options.AddSchemaTransformer<ProblemDetailsSchemaTransformer>());
 ```
 
-Registers a schema transformer that adds `errors`, `requestId`, `traceId`, `nodeId`, `aggregateId`, `aggregateCode` and `aggregateType` to the `ProblemDetails` / `ValidationProblemDetails` / `HttpValidationProblemDetails` OpenAPI schemas, using the native Microsoft OpenAPI engine.
+Registers `ProblemDetailsSchemaTransformer`, which adds `errors`, `requestId`, `traceId`, `nodeId`, `aggregateId`, `aggregateCode` and `aggregateType` to the `ProblemDetails` / `ValidationProblemDetails` / `HttpValidationProblemDetails` OpenAPI schemas, using the native Microsoft OpenAPI engine. The `AddOpenApi` call stays visible in your `Program`; the package only contributes the transformer.
 
 ## Requirements
 

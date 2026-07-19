@@ -18,25 +18,35 @@ dotnet add package JorgeCostaMacia.Http.Exception
 ## Usage
 
 ```csharp
-builder.Services.AddProblemDetailsContext();   // or plain AddProblemDetails() — REQUIRED:
-                                               // without an IProblemDetailsService the pipeline
-                                               // throws InvalidOperationException at startup
+using JorgeCostaMacia.Http.Exception.Infrastructure;
+using JorgeCostaMacia.Http.ProblemDetails.Infrastructure;
+
+builder.Services.AddProblemDetails(options => options.WithDefaults());   // or plain AddProblemDetails() — REQUIRED:
+                                                                        // without an IProblemDetailsService the pipeline
+                                                                        // throws InvalidOperationException at startup
 
 var app = builder.Build();
 
-app.UseExceptionContext();
+app.UseExceptionHandler(new ExceptionHandlerOptions().WithDefaultStatusCodes());
 ```
 
-Pair it with [`JorgeCostaMacia.Http.ProblemDetails`](https://www.nuget.org/packages/JorgeCostaMacia.Http.ProblemDetails/) (`AddProblemDetailsContext()`) so the mapped status codes ship with the enriched RFC 7807 body.
+Pair it with [`JorgeCostaMacia.Http.ProblemDetails`](https://www.nuget.org/packages/JorgeCostaMacia.Http.ProblemDetails/) (`AddProblemDetails(o => o.WithDefaults())`) so the mapped status codes ship with the enriched RFC 7807 body.
+
+`DefaultStatusCodeSelector` is public, so you can compose it — map a third-party exception explicitly and delegate the rest to the default.
 
 ## Status code mapping
 
 | Exception | HTTP status |
 | --- | --- |
+| `DomainException` (and derived) | its own `AggregateHttpCode` |
 | `BadHttpRequestException` | its own `StatusCode` |
 | `FluentValidation.ValidationException` | 400 |
-| `DomainException` (and derived) | its own `AggregateHttpCode` |
+| `UnauthorizedAccessException` | 403 |
+| `OperationCanceledException` / `TaskCanceledException` | 499 |
+| `NotImplementedException` | 501 |
 | anything else | 500 |
+
+Programming-error exceptions (`ArgumentException`, `InvalidOperationException`…) and upstream-dependency failures fall through to 500 on purpose, so a bug never masquerades as a client error and the response never leaks — via a gateway code — that a downstream exists.
 
 ## Requirements
 
