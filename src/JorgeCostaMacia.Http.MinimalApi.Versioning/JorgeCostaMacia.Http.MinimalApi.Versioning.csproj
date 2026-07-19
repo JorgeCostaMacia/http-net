@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<Description>API versioning for Minimal APIs via URL segments (e.g. /v1/resource), wired from an 'ApiVersion' configuration value</Description>
+		<Description>Default API-versioning policy for Minimal APIs via URL segments (e.g. /v1/resource), as options extensions applied from the host's AddApiVersioning/AddApiExplorer</Description>
 		<PackageTags>http,versioning,api,minimalapi,aspnetcore,url</PackageTags>
 	</PropertyGroup>
 
