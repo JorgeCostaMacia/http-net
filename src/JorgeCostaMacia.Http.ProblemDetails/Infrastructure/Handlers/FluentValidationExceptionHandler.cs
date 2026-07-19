@@ -1,4 +1,5 @@
 using System.Text.Json;
+using JorgeCostaMacia.Http.ProblemDetails.Infrastructure.Helpers;
 
 namespace JorgeCostaMacia.Http.ProblemDetails.Infrastructure.Handlers;
 
@@ -23,6 +24,6 @@ internal static class FluentValidationExceptionHandler
         ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("AggregateId")] = null;
         ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("AggregateCode")] = null;
         ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("AggregateType")] = null;
-        ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("Errors")] = ValidationErrors.Build(exception.Errors, namingPolicy);
+        ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("Errors")] = ValidationErrorsHelper.Build(exception.Errors, namingPolicy);
     }
 }
