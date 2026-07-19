@@ -1,7 +1,7 @@
 using System.Text.Json;
 using FluentValidation.Results;
 
-namespace JorgeCostaMacia.Http.ProblemDetails.Infrastructure;
+namespace JorgeCostaMacia.Http.ProblemDetails.Infrastructure.Handlers;
 
 /// <summary>
 /// Builds the ProblemDetails <c>Errors</c> extension from a set of <see cref="ValidationFailure"/>,

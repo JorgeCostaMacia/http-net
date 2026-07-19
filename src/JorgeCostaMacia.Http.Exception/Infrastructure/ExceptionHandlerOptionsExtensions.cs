@@ -48,9 +48,9 @@ public static class ExceptionHandlerOptionsExtensions
     /// known exception types to their status code.
     /// <para>
     /// <b>Prerequisite:</b> an <c>IProblemDetailsService</c> must be registered — call
-    /// <c>AddProblemDetailsContext()</c> (JorgeCostaMacia.Http.ProblemDetails) or plain
-    /// <c>AddProblemDetails()</c>; without it the exception-handler middleware throws an
-    /// <see cref="InvalidOperationException"/> when the pipeline is built.
+    /// <c>AddProblemDetails(o =&gt; o.WithDefaults())</c>
+    /// (JorgeCostaMacia.Http.ProblemDetails) or plain <c>AddProblemDetails()</c>; without it the
+    /// exception-handler middleware throws an <see cref="InvalidOperationException"/> when the pipeline is built.
     /// </para>
     /// </summary>
     /// <param name="options">The options to configure.</param>

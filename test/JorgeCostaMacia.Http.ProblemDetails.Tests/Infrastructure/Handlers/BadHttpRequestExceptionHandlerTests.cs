@@ -1,8 +1,8 @@
 using System.Text.Json;
-using JorgeCostaMacia.Http.ProblemDetails.Infrastructure;
+using JorgeCostaMacia.Http.ProblemDetails.Infrastructure.Handlers;
 using Microsoft.AspNetCore.Http;
 
-namespace JorgeCostaMacia.Http.ProblemDetails.Tests.Infrastructure;
+namespace JorgeCostaMacia.Http.ProblemDetails.Tests.Infrastructure.Handlers;
 
 public class BadHttpRequestExceptionHandlerTests
 {
