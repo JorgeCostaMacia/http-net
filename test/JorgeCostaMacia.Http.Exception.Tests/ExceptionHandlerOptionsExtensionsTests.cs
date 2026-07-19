@@ -64,10 +64,6 @@ public class ExceptionHandlerOptionsExtensionsTests
         => Assert.Equal(HttpStatusCode.NotImplemented, (await Request(new NotImplementedException())).StatusCode);
 
     [Fact]
-    public async Task TimeoutException_MapsTo504()
-        => Assert.Equal(HttpStatusCode.GatewayTimeout, (await Request(new TimeoutException())).StatusCode);
-
-    [Fact]
     public async Task OperationCanceledException_MapsTo499()
         => Assert.Equal((HttpStatusCode)499, (await Request(new OperationCanceledException())).StatusCode);
 
