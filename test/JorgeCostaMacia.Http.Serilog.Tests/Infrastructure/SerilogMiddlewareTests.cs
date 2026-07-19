@@ -15,7 +15,7 @@ using Microsoft.Extensions.Logging;
 // enclosing 'JorgeCostaMacia.Http.Serilog' package namespace in test code.
 namespace JorgeCostaMacia.Http.Serilog.Tests.Infrastructure;
 
-public class SerilogMiddlewareExtensionsTests
+public class SerilogMiddlewareTests
 {
     /// <summary>A trivial capture sink — no AsyncLocal magic, every emitted event lands here.</summary>
     private sealed class CaptureSink : ILogEventSink
@@ -37,9 +37,9 @@ public class SerilogMiddlewareExtensionsTests
         builder.Services.AddSerilog();   // registers the static logger above (the middleware's fallback too)
 
         WebApplication app = builder.Build();
-        app.UseSerilogBodyBuffer();
-        app.UseSerilogEnrichRequest();
-        app.UseSerilogEnrichAuthentication();
+        BodyBufferMiddleware.Use(app);
+        EnrichRequestMiddleware.Use(app);
+        EnrichAuthenticationMiddleware.Use(app);
         app.UseSerilogRequestSummary();
         app.MapPost("/echo", async (HttpRequest request) =>
         {
