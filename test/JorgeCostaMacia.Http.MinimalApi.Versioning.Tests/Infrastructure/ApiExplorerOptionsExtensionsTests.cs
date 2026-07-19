@@ -21,4 +21,8 @@ public class ApiExplorerOptionsExtensionsTests
         Assert.Equal("'v'V", options.GroupNameFormat);
         Assert.True(options.SubstituteApiVersionInUrl);
     }
+
+    [Fact]
+    public void WithDefaults_UsesTheGivenGroupNameFormat_WhenProvided()
+        => Assert.Equal("'v'VVV", new ApiExplorerOptions().WithDefaults("'v'VVV").GroupNameFormat);
 }
