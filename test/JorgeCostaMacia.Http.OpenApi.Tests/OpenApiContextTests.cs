@@ -10,7 +10,8 @@ namespace JorgeCostaMacia.Http.OpenApi.Tests;
 
 public class OpenApiContextTests
 {
-    private static async Task<JsonElement> ProblemDetailsSchema()
+    /// <summary>Generates the OpenAPI document over a TestServer and returns its <c>components/schemas</c> node, with both a ProblemDetails and a ValidationProblemDetails response produced so both schemas appear.</summary>
+    private static async Task<JsonElement> Schemas()
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder();
         builder.WebHost.UseTestServer();
@@ -20,14 +21,17 @@ public class OpenApiContextTests
         await using WebApplication app = builder.Build();
         app.MapOpenApi();
         app.MapGet("/resource", () => "ok").ProducesProblem(StatusCodes.Status400BadRequest);
+        app.MapPost("/resource", () => "ok").ProducesValidationProblem();
 
         await app.StartAsync(TestContext.Current.CancellationToken);
 
         string document = await app.GetTestClient().GetStringAsync("/openapi/v1.json", TestContext.Current.CancellationToken);
 
-        return JsonDocument.Parse(document).RootElement
-            .GetProperty("components").GetProperty("schemas").GetProperty("ProblemDetails").GetProperty("properties");
+        return JsonDocument.Parse(document).RootElement.GetProperty("components").GetProperty("schemas");
     }
+
+    private static async Task<JsonElement> ProblemDetailsSchema()
+        => (await Schemas()).GetProperty("ProblemDetails").GetProperty("properties");
 
     [Fact]
     public async Task Schema_DeclaresTheEnrichmentProperties()
@@ -53,5 +57,23 @@ public class OpenApiContextTests
         Assert.Contains("null", raw);     // ...that may also be null for non-validation errors
         Assert.True(errors.TryGetProperty("additionalProperties", out JsonElement values));
         Assert.Contains("array", values.GetRawText());
+    }
+
+    [Fact]
+    public async Task ValidationProblemDetailsSchema_DeclaresTheTracingAndAggregateProperties()
+    {
+        JsonElement schemas = await Schemas();
+
+        // .ProducesValidationProblem() surfaces HttpValidationProblemDetails; the transformer enriches
+        // it (and the MVC ValidationProblemDetails) with the same tracing + aggregate fields as the base
+        // ProblemDetails — but NOT the extra "errors" (validation types already carry their own).
+        JsonElement properties = schemas.GetProperty("HttpValidationProblemDetails").GetProperty("properties");
+
+        Assert.True(properties.TryGetProperty("requestId", out _));
+        Assert.True(properties.TryGetProperty("traceId", out _));
+        Assert.True(properties.TryGetProperty("nodeId", out _));
+        Assert.True(properties.TryGetProperty("aggregateId", out _));
+        Assert.True(properties.TryGetProperty("aggregateCode", out _));
+        Assert.True(properties.TryGetProperty("aggregateType", out _));
     }
 }
