@@ -12,18 +12,16 @@ namespace JorgeCostaMacia.Http.Exception.Infrastructure;
 /// </summary>
 public static class ExceptionHandlerOptionsExtensions
 {
-    /// <summary>The status code Nginx uses when the client closes the connection before a response; not an IANA code, so it has no <see cref="StatusCodes"/> constant.</summary>
-    private const int Status499ClientClosedRequest = 499;
-
     /// <summary>
-    /// The default status-code policy, framework/BCL exceptions first, then ours and third-party.
-    /// A <see cref="BadHttpRequestException"/> uses its own <see cref="BadHttpRequestException.StatusCode"/>;
-    /// <see cref="UnauthorizedAccessException"/> → 403, <see cref="NotImplementedException"/> → 501, and
-    /// <see cref="OperationCanceledException"/> (including <see cref="TaskCanceledException"/>) → 499. Then
-    /// any <see cref="DomainException"/> (including its derived types — <see cref="NotFoundException"/>,
+    /// The default status-code policy, our own domain exceptions first, then framework and third-party.
+    /// Any <see cref="DomainException"/> (including its derived types — <see cref="NotFoundException"/>,
     /// <see cref="ExistException"/>, <see cref="ValidationException"/>…) uses its own
-    /// <see cref="DomainException.AggregateHttpCode"/>, and a <see cref="FluentValidation.ValidationException"/>
-    /// maps to <see cref="StatusCodes.Status400BadRequest"/>. Anything else maps to
+    /// <see cref="DomainException.AggregateHttpCode"/>; a <see cref="BadHttpRequestException"/> uses its own
+    /// <see cref="BadHttpRequestException.StatusCode"/>; a <see cref="FluentValidation.ValidationException"/>
+    /// maps to <see cref="StatusCodes.Status400BadRequest"/>; and a handful of framework/BCL exceptions map
+    /// to their honest code: <see cref="UnauthorizedAccessException"/> → 403,
+    /// <see cref="OperationCanceledException"/> (including <see cref="TaskCanceledException"/>) → 499, and
+    /// <see cref="NotImplementedException"/> → 501. Anything else maps to
     /// <see cref="StatusCodes.Status500InternalServerError"/> — this deliberately includes failures that
     /// depend on an upstream service (a timed-out or unreachable dependency), so the response never leaks
     /// through a gateway code (502/503/504) that a downstream even exists; and programming-error exceptions
@@ -35,12 +33,12 @@ public static class ExceptionHandlerOptionsExtensions
     /// <returns>The HTTP status code for <paramref name="exception"/>.</returns>
     public static int DefaultStatusCodeSelector(System.Exception exception) => exception switch
     {
-        BadHttpRequestException e => e.StatusCode,
-        UnauthorizedAccessException => StatusCodes.Status403Forbidden,
-        NotImplementedException => StatusCodes.Status501NotImplemented,
-        OperationCanceledException => Status499ClientClosedRequest,
         DomainException e => e.AggregateHttpCode,
+        BadHttpRequestException e => e.StatusCode,
         FluentValidation.ValidationException => StatusCodes.Status400BadRequest,
+        UnauthorizedAccessException => StatusCodes.Status403Forbidden,
+        OperationCanceledException => StatusCodes.Status499ClientClosedRequest,
+        NotImplementedException => StatusCodes.Status501NotImplemented,
         _ => StatusCodes.Status500InternalServerError
     };
 
