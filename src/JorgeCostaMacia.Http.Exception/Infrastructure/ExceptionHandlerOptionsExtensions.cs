@@ -16,31 +16,30 @@ public static class ExceptionHandlerOptionsExtensions
     private const int Status499ClientClosedRequest = 499;
 
     /// <summary>
-    /// The default status-code policy. A <see cref="BadHttpRequestException"/> uses its own
-    /// <see cref="BadHttpRequestException.StatusCode"/>; a <see cref="FluentValidation.ValidationException"/>
-    /// maps to <see cref="StatusCodes.Status400BadRequest"/>; any <see cref="DomainException"/> (including
-    /// its derived types — <see cref="NotFoundException"/>, <see cref="ExistException"/>,
-    /// <see cref="ValidationException"/>…) uses its own <see cref="DomainException.AggregateHttpCode"/>.
-    /// A handful of well-known framework exceptions map to their honest code:
+    /// The default status-code policy, framework/BCL exceptions first, then ours and third-party.
+    /// A <see cref="BadHttpRequestException"/> uses its own <see cref="BadHttpRequestException.StatusCode"/>;
     /// <see cref="UnauthorizedAccessException"/> → 403, <see cref="NotImplementedException"/> → 501,
     /// <see cref="TimeoutException"/> → 504, and <see cref="OperationCanceledException"/> (including
-    /// <see cref="TaskCanceledException"/>) → 499. Anything else maps to
-    /// <see cref="StatusCodes.Status500InternalServerError"/> — programming-error exceptions
-    /// (<see cref="ArgumentException"/>, <see cref="InvalidOperationException"/>…) fall here on purpose,
-    /// so a bug surfaces as a 500 rather than being disguised as a client error. Public so a host can
-    /// compose it — map a third-party exception explicitly and delegate the rest here.
+    /// <see cref="TaskCanceledException"/>) → 499. Then any <see cref="DomainException"/> (including its
+    /// derived types — <see cref="NotFoundException"/>, <see cref="ExistException"/>,
+    /// <see cref="ValidationException"/>…) uses its own <see cref="DomainException.AggregateHttpCode"/>, and
+    /// a <see cref="FluentValidation.ValidationException"/> maps to <see cref="StatusCodes.Status400BadRequest"/>.
+    /// Anything else maps to <see cref="StatusCodes.Status500InternalServerError"/> — programming-error
+    /// exceptions (<see cref="ArgumentException"/>, <see cref="InvalidOperationException"/>…) fall here on
+    /// purpose, so a bug surfaces as a 500 rather than being disguised as a client error. Public so a host
+    /// can compose it — map a third-party exception explicitly and delegate the rest here.
     /// </summary>
     /// <param name="exception">The unhandled exception.</param>
     /// <returns>The HTTP status code for <paramref name="exception"/>.</returns>
     public static int DefaultStatusCodeSelector(System.Exception exception) => exception switch
     {
         BadHttpRequestException e => e.StatusCode,
-        FluentValidation.ValidationException => StatusCodes.Status400BadRequest,
-        DomainException e => e.AggregateHttpCode,
         UnauthorizedAccessException => StatusCodes.Status403Forbidden,
         NotImplementedException => StatusCodes.Status501NotImplemented,
         TimeoutException => StatusCodes.Status504GatewayTimeout,
         OperationCanceledException => Status499ClientClosedRequest,
+        DomainException e => e.AggregateHttpCode,
+        FluentValidation.ValidationException => StatusCodes.Status400BadRequest,
         _ => StatusCodes.Status500InternalServerError
     };
 
