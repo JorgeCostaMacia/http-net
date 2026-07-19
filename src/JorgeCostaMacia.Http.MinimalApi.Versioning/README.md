@@ -1,6 +1,6 @@
 # JorgeCostaMacia.Http.MinimalApi.Versioning
 
-**URL-segment API versioning for Minimal APIs** — one call wires [Asp.Versioning](https://github.com/dotnet/aspnet-api-versioning) from an `ApiVersion` configuration value, with ApiExplorer integration for OpenAPI.
+**URL-segment API versioning defaults for Minimal APIs** — options extensions that apply the default [Asp.Versioning](https://github.com/dotnet/aspnet-api-versioning) policy (URL segments + ApiExplorer for OpenAPI), keeping the framework's `AddApiVersioning`/`AddApiExplorer` calls visible in your `Program`.
 
 [![NuGet](https://img.shields.io/nuget/v/JorgeCostaMacia.Http.MinimalApi.Versioning.svg)](https://www.nuget.org/packages/JorgeCostaMacia.Http.MinimalApi.Versioning/)
 [![Downloads](https://img.shields.io/nuget/dt/JorgeCostaMacia.Http.MinimalApi.Versioning.svg)](https://www.nuget.org/packages/JorgeCostaMacia.Http.MinimalApi.Versioning/)
@@ -17,16 +17,21 @@ dotnet add package JorgeCostaMacia.Http.MinimalApi.Versioning
 
 ## Usage
 
-```jsonc
-// appsettings.json
-{ "ApiVersion": 1 }
+```csharp
+using JorgeCostaMacia.Http.MinimalApi.Versioning.Infrastructure;
+
+builder.Services
+    .AddApiVersioning(options => options.WithDefaults())
+    .AddApiExplorer(options => options.WithDefaults());
 ```
+
+Configures URL-segment versioning (e.g. `/v1/resource`): sets the default version, reports `api-supported-versions` headers, assumes the default when unspecified, and substitutes the `{version:apiVersion}` route token.
+
+`WithDefaults()` defaults to major version `1`. Pass another (`WithDefaults(2)`, or `WithDefaults(2, 1)` for `v2.1`), or read it from configuration — a nullable value falls back to `1`:
 
 ```csharp
-builder.Services.AddVersioningContext(builder.Configuration);
+.AddApiVersioning(options => options.WithDefaults(builder.Configuration.GetValue<int?>("ApiVersion")))
 ```
-
-Configures URL-segment versioning (e.g. `/v1/resource`): sets the default version, reports `api-supported-versions` headers, assumes the default when unspecified, and substitutes the `{version:apiVersion}` route token. Throws if `ApiVersion` is missing from configuration.
 
 ## Requirements
 

@@ -18,7 +18,9 @@ dotnet add package JorgeCostaMacia.Http.Exception.Serilog
 ## Usage
 
 ```csharp
-builder.Services.AddExceptionHandlerContext();
+using JorgeCostaMacia.Http.Exception.Serilog.Infrastructure;
+
+builder.Services.AddExceptionHandler<ExceptionHandler>();
 ```
 
 The handler logs known exceptions (`DomainException`, `BadHttpRequestException`, `FluentValidation.ValidationException`) at **Warning** and everything else at **Error**, pushing `ExceptionAggregateId` / `ExceptionAggregateCode` / `ExceptionAggregateType` / `UserName` to the Serilog `LogContext`. It always returns `false`, so the response is still produced by your status-code mapping (e.g. [JorgeCostaMacia.Http.Exception](https://www.nuget.org/packages/JorgeCostaMacia.Http.Exception/)).

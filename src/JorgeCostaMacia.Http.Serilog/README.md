@@ -20,11 +20,13 @@ dotnet add package JorgeCostaMacia.Http.Serilog
 Register in pipeline order:
 
 ```csharp
-app.UseSerilogBodyBufferContext();          // enable body re-reading
-app.UseSerilogEnrichRequestContext();       // scheme, host, ip, body, user-agent, X-Request-ID
+using JorgeCostaMacia.Http.Serilog.Infrastructure;
+
+app.UseBodyBufferMiddleware();          // enable body re-reading
+app.UseEnrichRequestMiddleware();       // scheme, host, ip, body, user-agent, X-Request-ID
 app.UseAuthentication();
-app.UseSerilogEnrichAuthenticationContext(); // UserName (after auth)
-app.UseSerilogRequestLoggingContext();       // one "Request End" event per request
+app.UseEnrichAuthenticationMiddleware(); // UserName (after auth)
+app.UseSerilogRequestLogging(options => options.WithDefaults());   // one "Request End" event per request
 ```
 
 The request-completion event is logged at **Error** for exceptions / 5xx, **Warning** for 4xx, and **Information** otherwise.
