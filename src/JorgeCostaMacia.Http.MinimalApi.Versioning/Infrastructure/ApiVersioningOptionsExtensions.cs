@@ -33,7 +33,11 @@ public static class ApiVersioningOptionsExtensions
     /// <returns>The same <paramref name="options"/>, for chaining.</returns>
     public static ApiVersioningOptions WithDefaults(this ApiVersioningOptions options, int? majorVersion = null, int? minorVersion = null)
     {
-        options.DefaultApiVersion = minorVersion is int ? new ApiVersion(majorVersion ?? DefaultMajorVersion, minorVersion) : new ApiVersion(majorVersion ?? DefaultMajorVersion);
+        // pick the constructor by whether a minor was given: with one the version is major.minor (v1.1);
+        // without one it stays major-only (v1) — the two-arg ctor with a 0 minor would render as v1.0.
+        options.DefaultApiVersion = minorVersion is int
+             ? new ApiVersion(majorVersion ?? DefaultMajorVersion, minorVersion)
+             : new ApiVersion(majorVersion ?? DefaultMajorVersion);
         options.ReportApiVersions = true;
         options.AssumeDefaultVersionWhenUnspecified = true;
         options.ApiVersionReader = new UrlSegmentApiVersionReader();
