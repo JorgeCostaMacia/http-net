@@ -3,7 +3,6 @@ using FluentValidation.Results;
 using JorgeCostaMacia.Exception.Domain;
 using JorgeCostaMacia.Http.Exception.Infrastructure;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;

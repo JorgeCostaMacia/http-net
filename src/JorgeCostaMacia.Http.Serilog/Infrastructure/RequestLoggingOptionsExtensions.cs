@@ -1,5 +1,5 @@
-using global::Serilog.AspNetCore;
-using global::Serilog.Events;
+using Serilog.AspNetCore;
+using Serilog.Events;
 
 namespace JorgeCostaMacia.Http.Serilog.Infrastructure;
 
