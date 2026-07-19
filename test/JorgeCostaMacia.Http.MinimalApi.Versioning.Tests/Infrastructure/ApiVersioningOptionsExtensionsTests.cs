@@ -31,4 +31,8 @@ public class ApiVersioningOptionsExtensionsTests
     [Fact]
     public void WithDefaults_DefaultsToVersionOne_WhenNull()
         => Assert.Equal(new ApiVersion(1), new ApiVersioningOptions().WithDefaults(null).DefaultApiVersion);
+
+    [Fact]
+    public void WithDefaults_SetsMajorAndMinor_WhenMinorGiven()
+        => Assert.Equal(new ApiVersion(2, 1), new ApiVersioningOptions().WithDefaults(2, 1).DefaultApiVersion);
 }
