@@ -2,6 +2,7 @@ using global::Serilog;
 using global::Serilog.Core;
 using global::Serilog.Events;
 using JorgeCostaMacia.Exception.Domain;
+using JorgeCostaMacia.Http.Exception.Serilog.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -15,8 +16,9 @@ namespace JorgeCostaMacia.Http.Exception.Serilog.Tests.Infrastructure;
 file sealed class TestDomainException() : DomainException(null, null, null, null, null, "boom", null);
 
 /// <summary>
-/// End-to-end tests over <see cref="SerilogContext.AddExceptionHandlerContext"/> through the real
-/// ASP.NET Core exception pipeline into a live Serilog sink. The unit tests assert only the log LEVEL
+/// End-to-end tests over <see cref="ExceptionHandler"/> — registered from the host as
+/// <c>AddExceptionHandler&lt;ExceptionHandler&gt;()</c> — through the real ASP.NET Core exception
+/// pipeline into a live Serilog sink. The unit tests assert only the log LEVEL
 /// against an <see cref="ILogger"/> fake; only here do the fixed message ("Request Fail"/"Request Crash")
 /// and the <c>LogContext</c> enrichment (aggregate metadata + user name) actually reach an emitted event.
 /// </summary>
@@ -54,7 +56,7 @@ public class ExceptionHandlerIntegrationTests
         builder.WebHost.UseTestServer();
         builder.Logging.ClearProviders();
         builder.Services.AddSerilog();
-        builder.Services.AddExceptionHandlerContext();
+        builder.Services.AddExceptionHandler<ExceptionHandler>();
         builder.Services.AddProblemDetails();   // gives UseExceptionHandler a response to write after the handler logs
 
         WebApplication app = builder.Build();

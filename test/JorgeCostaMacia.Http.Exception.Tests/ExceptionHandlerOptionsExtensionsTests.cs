@@ -1,6 +1,7 @@
 using System.Net;
 using FluentValidation.Results;
 using JorgeCostaMacia.Exception.Domain;
+using JorgeCostaMacia.Http.Exception.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -16,7 +17,7 @@ file sealed class TestExistException() : ExistException(null, null, null, null, 
 
 file sealed class TestValidationException() : ValidationException(null, null, null, null, null, null, null, new List<ValidationFailure>());
 
-public class ExceptionContextTests
+public class ExceptionHandlerOptionsExtensionsTests
 {
     private static async Task<HttpResponseMessage> Request(System.Exception exception)
     {
@@ -26,7 +27,7 @@ public class ExceptionContextTests
         builder.Services.AddProblemDetails();
 
         await using WebApplication app = builder.Build();
-        app.UseExceptionContext();
+        app.UseExceptionHandler(new ExceptionHandlerOptions().WithDefaultStatusCodes());
         app.MapGet("/throw", () => { throw exception; });
 
         await app.StartAsync(TestContext.Current.CancellationToken);
