@@ -75,7 +75,7 @@ public abstract record RequestHttp : IRequestHttp
     /// </param>
     protected RequestHttp(Guid? aggregateId, Guid? aggregateCorrelationId, DateTime? aggregateOccurredAt)
     {
-        AggregateId = aggregateId ?? JorgeCostaMacia.GuidFactory.Domain.GuidFactory.Create();
+        AggregateId = aggregateId ?? GuidFactory.Domain.GuidFactory.Create();
         AggregateCorrelationId = aggregateCorrelationId ?? AggregateId;
         AggregateOccurredAt = aggregateOccurredAt ?? DateTime.UtcNow;
     }

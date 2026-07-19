@@ -8,7 +8,7 @@ public class RequestHttpTests
         : RequestHttp(Id, Correlation, OccurredAt);
 
     [Fact]
-    public void Defaults_generate_id_correlation_and_utc_timestamp()
+    public void Defaults_GenerateIdCorrelationAndUtcTimestamp()
     {
         DateTime before = DateTime.UtcNow;
         TestRequest request = new TestRequest(null, null, null);
@@ -21,7 +21,7 @@ public class RequestHttpTests
     }
 
     [Fact]
-    public void Correlation_defaults_to_the_supplied_id()
+    public void Correlation_DefaultsToTheSuppliedId()
     {
         Guid id = Guid.NewGuid();
 
@@ -31,7 +31,7 @@ public class RequestHttpTests
     }
 
     [Fact]
-    public void Keeps_supplied_values()
+    public void Keeps_SuppliedValues()
     {
         Guid id = Guid.NewGuid();
         Guid correlation = Guid.NewGuid();

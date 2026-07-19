@@ -70,7 +70,7 @@ public abstract record ResponseHttp : IResponseHttp
     /// </param>
     protected ResponseHttp(Guid? aggregateId, Guid? aggregateCorrelationId, DateTime? aggregateOccurredAt)
     {
-        AggregateId = aggregateId ?? JorgeCostaMacia.GuidFactory.Domain.GuidFactory.Create();
+        AggregateId = aggregateId ?? GuidFactory.Domain.GuidFactory.Create();
         AggregateCorrelationId = aggregateCorrelationId ?? AggregateId;
         AggregateOccurredAt = aggregateOccurredAt ?? DateTime.UtcNow;
     }
