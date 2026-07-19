@@ -6,17 +6,17 @@ namespace JorgeCostaMacia.Http.MinimalApi.Versioning.Tests.Infrastructure;
 public class ApiExplorerOptionsExtensionsTests
 {
     [Fact]
-    public void WithDefaultsExplorer_ReturnsSameOptions_ForChaining()
+    public void WithDefaults_ReturnsSameOptions_ForChaining()
     {
         ApiExplorerOptions options = new ApiExplorerOptions();
 
-        Assert.Same(options, options.WithDefaultsExplorer());
+        Assert.Same(options, options.WithDefaults());
     }
 
     [Fact]
-    public void WithDefaultsExplorer_ConfiguresVersionedGroupNamesAndUrlSubstitution()
+    public void WithDefaults_ConfiguresVersionedGroupNamesAndUrlSubstitution()
     {
-        ApiExplorerOptions options = new ApiExplorerOptions().WithDefaultsExplorer();
+        ApiExplorerOptions options = new ApiExplorerOptions().WithDefaults();
 
         Assert.Equal("'v'V", options.GroupNameFormat);
         Assert.True(options.SubstituteApiVersionInUrl);

@@ -19,7 +19,7 @@ public static class ApiVersioningOptionsExtensions
     /// <param name="options">The options to configure.</param>
     /// <param name="apiVersion">The major API version to use as the default.</param>
     /// <returns>The same <paramref name="options"/>, for chaining.</returns>
-    public static ApiVersioningOptions WithDefaultsVersioning(this ApiVersioningOptions options, int apiVersion)
+    public static ApiVersioningOptions WithDefaults(this ApiVersioningOptions options, int apiVersion)
     {
         options.DefaultApiVersion = new ApiVersion(apiVersion);
         options.ReportApiVersions = true;

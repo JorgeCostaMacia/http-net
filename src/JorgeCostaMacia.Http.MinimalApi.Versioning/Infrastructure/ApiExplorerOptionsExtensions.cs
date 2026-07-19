@@ -16,7 +16,7 @@ public static class ApiExplorerOptionsExtensions
     /// </summary>
     /// <param name="options">The options to configure.</param>
     /// <returns>The same <paramref name="options"/>, for chaining.</returns>
-    public static ApiExplorerOptions WithDefaultsExplorer(this ApiExplorerOptions options)
+    public static ApiExplorerOptions WithDefaults(this ApiExplorerOptions options)
     {
         options.GroupNameFormat = "'v'V";
         options.SubstituteApiVersionInUrl = true;
