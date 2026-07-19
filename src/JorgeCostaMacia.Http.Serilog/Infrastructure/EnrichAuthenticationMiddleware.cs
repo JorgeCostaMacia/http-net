@@ -21,16 +21,12 @@ public static class EnrichAuthenticationMiddleware
     /// </summary>
     /// <param name="app">The <see cref="WebApplication"/> to configure.</param>
     /// <returns>The same <see cref="WebApplication"/> instance, to allow method chaining.</returns>
-    public static WebApplication Use(WebApplication app)
-    {
-        app.Use(async (context, next) =>
+    public static WebApplication UseEnrichAuthenticationMiddleware(this WebApplication app) =>
+        (WebApplication)app.Use(async (context, next) =>
         {
             using (LogContext.PushProperty("UserName", context.User?.Identity?.Name ?? "anonymous"))
             {
                 await next();
             }
         });
-
-        return app;
-    }
 }

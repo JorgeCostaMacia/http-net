@@ -16,15 +16,11 @@ public static class BodyBufferMiddleware
     /// </summary>
     /// <param name="app">The <see cref="WebApplication"/> to configure.</param>
     /// <returns>The same <see cref="WebApplication"/> instance, to allow method chaining.</returns>
-    public static WebApplication Use(WebApplication app)
-    {
-        app.Use(async (context, next) =>
+    public static WebApplication UseBodyBufferMiddleware(this WebApplication app) =>
+        (WebApplication)app.Use(async (context, next) =>
         {
             context.Request.EnableBuffering();
 
             await next();
         });
-
-        return app;
-    }
 }

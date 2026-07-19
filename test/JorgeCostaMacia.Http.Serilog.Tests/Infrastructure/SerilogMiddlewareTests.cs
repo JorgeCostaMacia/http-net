@@ -37,10 +37,10 @@ public class SerilogMiddlewareTests
         builder.Services.AddSerilog();   // registers the static logger above (the middleware's fallback too)
 
         WebApplication app = builder.Build();
-        BodyBufferMiddleware.Use(app);
-        EnrichRequestMiddleware.Use(app);
-        EnrichAuthenticationMiddleware.Use(app);
-        app.UseSerilogRequestSummary();
+        app.UseBodyBufferMiddleware();
+        app.UseEnrichRequestMiddleware();
+        app.UseEnrichAuthenticationMiddleware();
+        app.UseRequestSummaryMiddleware();
         app.MapPost("/echo", async (HttpRequest request) =>
         {
             using StreamReader reader = new StreamReader(request.Body);
