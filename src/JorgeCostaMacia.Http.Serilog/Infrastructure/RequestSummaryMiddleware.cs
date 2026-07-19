@@ -5,11 +5,8 @@ using Microsoft.AspNetCore.Builder;
 namespace JorgeCostaMacia.Http.Serilog.Infrastructure;
 
 /// <summary>
-/// Extension that configures Serilog's built-in HTTP request logging, emitting one summary log event per
-/// request. It wraps the framework's own <c>UseSerilogRequestLogging</c>, so it reads as an extension on
-/// <see cref="WebApplication"/> — unlike the custom middleware (<see cref="BodyBufferMiddleware"/>,
-/// <see cref="EnrichRequestMiddleware"/>, <see cref="EnrichAuthenticationMiddleware"/>), which are
-/// registered explicitly.
+/// Middleware that configures Serilog's built-in HTTP request logging, emitting one summary log event per
+/// request. It wraps the framework's own <c>UseSerilogRequestLogging</c>.
 /// </summary>
 public static class RequestSummaryMiddleware
 {
@@ -21,9 +18,8 @@ public static class RequestSummaryMiddleware
     /// </summary>
     /// <param name="app">The <see cref="WebApplication"/> to configure.</param>
     /// <returns>The same <see cref="WebApplication"/> instance, to allow method chaining.</returns>
-    public static WebApplication UseSerilogRequestSummary(this WebApplication app)
-    {
-        app.UseSerilogRequestLogging(options =>
+    public static WebApplication UseRequestSummaryMiddleware(this WebApplication app) =>
+        (WebApplication)app.UseSerilogRequestLogging(options =>
         {
             options.EnrichDiagnosticContext = (diagnosticContext, httpContext) => diagnosticContext.Set("UserName", httpContext.User?.Identity?.Name ?? "anonymous");
 
@@ -49,7 +45,4 @@ public static class RequestSummaryMiddleware
 
             options.MessageTemplate = "Request End";
         });
-
-        return app;
-    }
 }

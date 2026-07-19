@@ -24,9 +24,8 @@ public static class EnrichRequestMiddleware
     /// </summary>
     /// <param name="app">The <see cref="WebApplication"/> to configure.</param>
     /// <returns>The same <see cref="WebApplication"/> instance, to allow method chaining.</returns>
-    public static WebApplication Use(WebApplication app)
-    {
-        app.Use(async (context, next) =>
+    public static WebApplication UseEnrichRequestMiddleware(this WebApplication app) =>
+        (WebApplication)app.Use(async (context, next) =>
         {
             string body = string.Empty;
 
@@ -61,7 +60,4 @@ public static class EnrichRequestMiddleware
                 await next();
             }
         });
-
-        return app;
-    }
 }
