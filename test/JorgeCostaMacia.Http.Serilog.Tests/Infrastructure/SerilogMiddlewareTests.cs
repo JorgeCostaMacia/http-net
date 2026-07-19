@@ -40,7 +40,7 @@ public class SerilogMiddlewareTests
         app.UseBodyBufferMiddleware();
         app.UseEnrichRequestMiddleware();
         app.UseEnrichAuthenticationMiddleware();
-        app.UseRequestSummaryMiddleware();
+        app.UseSerilogRequestLogging(options => options.WithDefaults());
         app.MapPost("/echo", async (HttpRequest request) =>
         {
             using StreamReader reader = new StreamReader(request.Body);
