@@ -56,6 +56,26 @@ public class ExceptionHandlerOptionsExtensionsTests
         => Assert.Equal(HttpStatusCode.UnsupportedMediaType, (await Request(new BadHttpRequestException("bad", StatusCodes.Status415UnsupportedMediaType))).StatusCode);
 
     [Fact]
+    public async Task UnauthorizedAccessException_MapsTo403()
+        => Assert.Equal(HttpStatusCode.Forbidden, (await Request(new UnauthorizedAccessException())).StatusCode);
+
+    [Fact]
+    public async Task NotImplementedException_MapsTo501()
+        => Assert.Equal(HttpStatusCode.NotImplemented, (await Request(new NotImplementedException())).StatusCode);
+
+    [Fact]
+    public async Task TimeoutException_MapsTo504()
+        => Assert.Equal(HttpStatusCode.GatewayTimeout, (await Request(new TimeoutException())).StatusCode);
+
+    [Fact]
+    public async Task OperationCanceledException_MapsTo499()
+        => Assert.Equal((HttpStatusCode)499, (await Request(new OperationCanceledException())).StatusCode);
+
+    [Fact]
+    public async Task TaskCanceledException_MapsTo499_ViaItsOperationCanceledBase()
+        => Assert.Equal((HttpStatusCode)499, (await Request(new TaskCanceledException())).StatusCode);
+
+    [Fact]
     public async Task UnexpectedException_MapsTo500()
         => Assert.Equal(HttpStatusCode.InternalServerError, (await Request(new InvalidOperationException("crash"))).StatusCode);
 }

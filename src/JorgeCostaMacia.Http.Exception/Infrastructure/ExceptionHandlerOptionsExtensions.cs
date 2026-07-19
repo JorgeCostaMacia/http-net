@@ -12,13 +12,23 @@ namespace JorgeCostaMacia.Http.Exception.Infrastructure;
 /// </summary>
 public static class ExceptionHandlerOptionsExtensions
 {
+    /// <summary>The status code Nginx uses when the client closes the connection before a response; not an IANA code, so it has no <see cref="StatusCodes"/> constant.</summary>
+    private const int Status499ClientClosedRequest = 499;
+
     /// <summary>
-    /// The default status-code policy: a <see cref="BadHttpRequestException"/> uses its own
+    /// The default status-code policy. A <see cref="BadHttpRequestException"/> uses its own
     /// <see cref="BadHttpRequestException.StatusCode"/>; a <see cref="FluentValidation.ValidationException"/>
     /// maps to <see cref="StatusCodes.Status400BadRequest"/>; any <see cref="DomainException"/> (including
-    /// its derived types) uses its own <see cref="DomainException.AggregateHttpCode"/>; anything else maps
-    /// to <see cref="StatusCodes.Status500InternalServerError"/>. Public so a host can compose it — map a
-    /// third-party exception explicitly and delegate the rest here.
+    /// its derived types — <see cref="NotFoundException"/>, <see cref="ExistException"/>,
+    /// <see cref="ValidationException"/>…) uses its own <see cref="DomainException.AggregateHttpCode"/>.
+    /// A handful of well-known framework exceptions map to their honest code:
+    /// <see cref="UnauthorizedAccessException"/> → 403, <see cref="NotImplementedException"/> → 501,
+    /// <see cref="TimeoutException"/> → 504, and <see cref="OperationCanceledException"/> (including
+    /// <see cref="TaskCanceledException"/>) → 499. Anything else maps to
+    /// <see cref="StatusCodes.Status500InternalServerError"/> — programming-error exceptions
+    /// (<see cref="ArgumentException"/>, <see cref="InvalidOperationException"/>…) fall here on purpose,
+    /// so a bug surfaces as a 500 rather than being disguised as a client error. Public so a host can
+    /// compose it — map a third-party exception explicitly and delegate the rest here.
     /// </summary>
     /// <param name="exception">The unhandled exception.</param>
     /// <returns>The HTTP status code for <paramref name="exception"/>.</returns>
@@ -27,6 +37,10 @@ public static class ExceptionHandlerOptionsExtensions
         BadHttpRequestException e => e.StatusCode,
         FluentValidation.ValidationException => StatusCodes.Status400BadRequest,
         DomainException e => e.AggregateHttpCode,
+        UnauthorizedAccessException => StatusCodes.Status403Forbidden,
+        NotImplementedException => StatusCodes.Status501NotImplemented,
+        TimeoutException => StatusCodes.Status504GatewayTimeout,
+        OperationCanceledException => Status499ClientClosedRequest,
         _ => StatusCodes.Status500InternalServerError
     };
 
