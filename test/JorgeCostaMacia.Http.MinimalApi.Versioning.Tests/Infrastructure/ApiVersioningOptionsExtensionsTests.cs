@@ -23,4 +23,8 @@ public class ApiVersioningOptionsExtensionsTests
         Assert.True(options.AssumeDefaultVersionWhenUnspecified);
         Assert.IsType<UrlSegmentApiVersionReader>(options.ApiVersionReader);
     }
+
+    [Fact]
+    public void WithDefaults_DefaultsToVersionOne_WhenNoVersionGiven()
+        => Assert.Equal(new ApiVersion(1), new ApiVersioningOptions().WithDefaults().DefaultApiVersion);
 }
