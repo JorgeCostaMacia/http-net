@@ -1,7 +1,7 @@
 using System.Text.Json;
 using JorgeCostaMacia.Exception.Domain;
 
-namespace JorgeCostaMacia.Http.ProblemDetails.Infrastructure;
+namespace JorgeCostaMacia.Http.ProblemDetails.Infrastructure.Handlers;
 
 /// <summary>
 /// Enriches the <see cref="Microsoft.AspNetCore.Http.ProblemDetailsContext"/> for a
