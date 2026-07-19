@@ -1,14 +1,16 @@
 using System.Text.Json;
+using JorgeCostaMacia.Http.OpenApi.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.OpenApi;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace JorgeCostaMacia.Http.OpenApi.Tests;
+namespace JorgeCostaMacia.Http.OpenApi.Tests.Infrastructure;
 
-public class OpenApiContextTests
+public class ProblemDetailsSchemaTransformerTests
 {
     /// <summary>Generates the OpenAPI document over a TestServer and returns its <c>components/schemas</c> node, with both a ProblemDetails and a ValidationProblemDetails response produced so both schemas appear.</summary>
     private static async Task<JsonElement> Schemas()
@@ -16,7 +18,7 @@ public class OpenApiContextTests
         WebApplicationBuilder builder = WebApplication.CreateBuilder();
         builder.WebHost.UseTestServer();
         builder.Logging.ClearProviders();
-        builder.Services.AddOpenApiContext();
+        builder.Services.AddOpenApi(options => options.AddSchemaTransformer<ProblemDetailsSchemaTransformer>());
 
         await using WebApplication app = builder.Build();
         app.MapOpenApi();

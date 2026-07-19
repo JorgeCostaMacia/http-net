@@ -9,7 +9,7 @@ namespace JorgeCostaMacia.Http.OpenApi.Infrastructure;
 /// and the aggregate context (<c>aggregateId</c>, <c>aggregateCode</c>, <c>aggregateType</c>) — so
 /// generated clients see the real payload shape instead of a bare <c>ProblemDetails</c>.
 /// </summary>
-internal sealed class ProblemDetailsSchemaTransformer : IOpenApiSchemaTransformer
+public sealed class ProblemDetailsSchemaTransformer : IOpenApiSchemaTransformer
 {
     /// <summary>Adds the enrichment properties to the ProblemDetails / ValidationProblemDetails schemas.</summary>
     /// <param name="schema">The schema being transformed.</param>
