@@ -1,8 +1,8 @@
-using global::Serilog.Context;
 using JorgeCostaMacia.Exception.Domain;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Serilog.Context;
 
 namespace JorgeCostaMacia.Http.Exception.Serilog.Infrastructure;
 
@@ -23,8 +23,10 @@ public sealed class ExceptionHandler : IExceptionHandler
 {
     private readonly ILogger<ExceptionHandler> _logger;
 
-    /// <inheritdoc/>
-    /// <inheritdoc/>
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ExceptionHandler"/> class.
+    /// </summary>
+    /// <param name="logger">The logger used to record each unhandled exception.</param>
     public ExceptionHandler(ILogger<ExceptionHandler> logger)
     {
         _logger = logger;
