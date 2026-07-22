@@ -15,7 +15,7 @@ file sealed class TestValidationException(IEnumerable<ValidationFailure> validat
 public class DomainExceptionHandlerTests
 {
     private static Microsoft.AspNetCore.Http.ProblemDetailsContext Context()
-        => new() { HttpContext = new DefaultHttpContext() };
+        => new Microsoft.AspNetCore.Http.ProblemDetailsContext() { HttpContext = new DefaultHttpContext() };
 
     [Fact]
     public void Handle_AddsAggregateExtensions_WithConvertedKeys_AndRawTypeValue()
@@ -45,7 +45,7 @@ public class DomainExceptionHandlerTests
     public void Handle_Validation_GroupsErrorsByPropertyName_RewritingMessages()
     {
         Microsoft.AspNetCore.Http.ProblemDetailsContext ctx = Context();
-        TestValidationException exception = new TestValidationException([new ValidationFailure("Name", "'Name' is required.")]);
+        TestValidationException exception = new TestValidationException(new ValidationFailure[] { new ValidationFailure("Name", "'Name' is required.") });
 
         DomainExceptionHandler.Handle(ctx, exception, JsonNamingPolicy.CamelCase);
 
@@ -58,7 +58,7 @@ public class DomainExceptionHandlerTests
     {
         // "Id" and "ID" both camelCase to "id": they must merge, not blow up ToDictionary.
         Microsoft.AspNetCore.Http.ProblemDetailsContext ctx = Context();
-        TestValidationException exception = new TestValidationException([new ValidationFailure("Id", "first"), new ValidationFailure("ID", "second")]);
+        TestValidationException exception = new TestValidationException(new ValidationFailure[] { new ValidationFailure("Id", "first"), new ValidationFailure("ID", "second") });
 
         DomainExceptionHandler.Handle(ctx, exception, JsonNamingPolicy.CamelCase);
 
