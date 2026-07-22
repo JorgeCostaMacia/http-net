@@ -7,7 +7,7 @@ namespace JorgeCostaMacia.Http.ProblemDetails.Tests.Infrastructure.Handlers;
 public class BadHttpRequestExceptionHandlerTests
 {
     private static Microsoft.AspNetCore.Http.ProblemDetailsContext Context()
-        => new() { HttpContext = new DefaultHttpContext() };
+        => new Microsoft.AspNetCore.Http.ProblemDetailsContext() { HttpContext = new DefaultHttpContext() };
 
     [Fact]
     public void Handle_NullsTheAggregateExtensions()
