@@ -15,32 +15,32 @@
 		<PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.1" />
 		<!-- Keep aligned with the FluentValidation that JorgeCostaMacia.Exception ships against — review both together on every Exception bump (a mismatch surfaces as NU1608 at restore). -->
 		<PackageVersion Include="FluentValidation" Version="12.1.1" />
-		<PackageVersion Include="JorgeCostaMacia.Exception" Version="6.0.4" />
-		<PackageVersion Include="JorgeCostaMacia.GuidFactory" Version="6.0.4" />
-		<PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10" />
-		<PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="8.0.29" />
-		<PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.10" />
-		<PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.10" />
+		<PackageVersion Include="JorgeCostaMacia.Exception" Version="6.0.5" />
+		<PackageVersion Include="JorgeCostaMacia.GuidFactory" Version="6.0.5" />
+		<PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.11" />
+		<PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="8.0.30" />
+		<PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.11" />
+		<PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.11" />
 		<!-- Pins the transitive Microsoft.OpenApi above the vulnerable 2.0.0 that AspNetCore.OpenApi pulls on net10 (GHSA-v5pm-xwqc-g5wc); inert on net8/9, which don't reference it. Needs CentralPackageTransitivePinningEnabled. -->
 		<PackageVersion Include="Microsoft.OpenApi" Version="2.7.5" />
-		<PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.301" />
+		<PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.400" />
 		<PackageVersion Include="Serilog" Version="4.4.0" />
 		<PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
-		<PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
-		<PackageVersion Include="xunit.v3" Version="3.2.2" />
+		<PackageVersion Include="xunit.runner.visualstudio" Version="4.0.0" />
+		<PackageVersion Include="xunit.v3" Version="4.0.0" />
 	</ItemGroup>
 
 	<!-- Per-TFM pins: each target gets its own runtime-aligned version (Asp.Versioning 10 and
 	     TestHost 10 are net10-only; TestHost ships one version per ASP.NET Core runtime), while the
 	     base entries above keep the oldest target compiling — same pattern as shared-net's EF Core. -->
 	<ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
-		<PackageVersion Update="Microsoft.AspNetCore.TestHost" Version="9.0.18" />
+		<PackageVersion Update="Microsoft.AspNetCore.TestHost" Version="9.0.19" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
-		<PackageVersion Update="Asp.Versioning.Http" Version="10.0.0" />
-		<PackageVersion Update="Asp.Versioning.Mvc.ApiExplorer" Version="10.0.0" />
-		<PackageVersion Update="Microsoft.AspNetCore.TestHost" Version="10.0.10" />
+		<PackageVersion Update="Asp.Versioning.Http" Version="10.2.3" />
+		<PackageVersion Update="Asp.Versioning.Mvc.ApiExplorer" Version="10.2.1" />
+		<PackageVersion Update="Microsoft.AspNetCore.TestHost" Version="10.0.11" />
 	</ItemGroup>
 
 </Project>
