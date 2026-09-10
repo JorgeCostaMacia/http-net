@@ -66,4 +66,61 @@ public class BadHttpRequestExceptionHandlerTests
         Dictionary<string, string[]> errors = Assert.IsType<Dictionary<string, string[]>>(ctx.ProblemDetails.Extensions["errors"]);
         Assert.Equal("One or more fields have an invalid data type format.", Assert.Single(errors["request"]));
     }
+    // The two JsonException paths. A real request on net10 lands in the wording branches instead, so
+    // nothing was reaching these — they are the shape the runtime raises when the body deserializes
+    // into a type with required members, and they have to keep working if that shape comes back.
+    [Fact]
+    public void Handle_MissingRequiredProperties_MapsEachFieldToItsOwnError()
+    {
+        Microsoft.AspNetCore.Http.ProblemDetailsContext ctx = Context();
+        // The runtime's own wording, verified against System.Text.Json on net10: the type is quoted too.
+        JsonException inner = new JsonException("JSON deserialization for type 'Sample' was missing required properties including: 'firstName'; 'lastName'.");
+
+        BadHttpRequestExceptionHandler.Handle(ctx, new BadHttpRequestException("bad", inner), JsonNamingPolicy.CamelCase);
+
+        Dictionary<string, string[]> errors = Assert.IsType<Dictionary<string, string[]>>(ctx.ProblemDetails.Extensions["errors"]);
+        Assert.Equal(2, errors.Count);
+        Assert.Equal("'firstName' must be present.", Assert.Single(errors["firstName"]));
+        Assert.Equal("'lastName' must be present.", Assert.Single(errors["lastName"]));
+    }
+
+    // The field names are quoted in the message; when none can be pulled out, the report falls back to
+    // one generic entry rather than an empty errors object.
+    [Fact]
+    public void Handle_MissingRequiredProperties_WithNoExtractableField_FallsBackToOneRequestError()
+    {
+        Microsoft.AspNetCore.Http.ProblemDetailsContext ctx = Context();
+        JsonException inner = new JsonException("JSON deserialization for type 'Sample' was missing required properties including: 'request'; 'nested.field'.");
+
+        BadHttpRequestExceptionHandler.Handle(ctx, new BadHttpRequestException("bad", inner), JsonNamingPolicy.CamelCase);
+
+        Dictionary<string, string[]> errors = Assert.IsType<Dictionary<string, string[]>>(ctx.ProblemDetails.Extensions["errors"]);
+        Assert.Equal("One or more required fields are not present.", Assert.Single(errors["request"]));
+    }
+
+    [Fact]
+    public void Handle_InvalidPropertyType_NamesTheFieldFromTheJsonPath()
+    {
+        Microsoft.AspNetCore.Http.ProblemDetailsContext ctx = Context();
+        // A real path from the runtime: $.age for a field that failed to convert.
+        JsonException inner = new JsonException("The JSON value could not be converted to System.Int32.", "$.age", 0, 56);
+
+        BadHttpRequestExceptionHandler.Handle(ctx, new BadHttpRequestException("bad", inner), JsonNamingPolicy.CamelCase);
+
+        Dictionary<string, string[]> errors = Assert.IsType<Dictionary<string, string[]>>(ctx.ProblemDetails.Extensions["errors"]);
+        Assert.Equal("'age' has an invalid data type format.", Assert.Single(errors["age"]));
+    }
+
+    // A path with nothing after the root ("$.") names no field, so the report stays generic.
+    [Fact]
+    public void Handle_InvalidPropertyType_WithNoFieldInThePath_FallsBackToOneRequestError()
+    {
+        Microsoft.AspNetCore.Http.ProblemDetailsContext ctx = Context();
+        JsonException inner = new JsonException("The JSON value could not be converted.", "$.", 0, 0);
+
+        BadHttpRequestExceptionHandler.Handle(ctx, new BadHttpRequestException("bad", inner), JsonNamingPolicy.CamelCase);
+
+        Dictionary<string, string[]> errors = Assert.IsType<Dictionary<string, string[]>>(ctx.ProblemDetails.Extensions["errors"]);
+        Assert.Equal("One or more fields have an invalid data type format.", Assert.Single(errors["request"]));
+    }
 }

@@ -5,11 +5,11 @@ ASP.NET Core building blocks — request/response abstractions, exception handli
 ## Layout
 
 - `src/<Package>/` — one package per folder. `test/<Package>.Tests/` — its tests. `assets/` — icons + social preview.
-- **3-tier `Directory.Build.props`**: **root** (repo identity — Authors / Company / Copyright / Repository — + the single lockstep `VersionPrefix`; TFMs `net8.0;net9.0;net10.0`; ImplicitUsings, Nullable, AnalysisLevel, EnforceCodeStyleInBuild) → **`src/`** (package-output: icon / readme / license, SourceLink, symbols, `GenerateDocumentationFile`, pack of LICENSE/COPYRIGHT/icon/README) → **`test/`** (test settings). Each `src` csproj declares **only** `Description` / `PackageTags`; everything else is inherited (don't restate it).
+- **3-tier `Directory.Build.props`**: **root** (repo identity — Authors / Company / Copyright / Repository — + the single lockstep `VersionPrefix`; TFM `net10.0`; ImplicitUsings, Nullable, AnalysisLevel, EnforceCodeStyleInBuild) → **`src/`** (package-output: icon / readme / license, SourceLink, symbols, `GenerateDocumentationFile`, pack of LICENSE/COPYRIGHT/icon/README) → **`test/`** (test settings). Each `src` csproj declares **only** `Description` / `PackageTags`; everything else is inherited (don't restate it).
 
 ## Targets & stack
 
-- TFMs: **`net8.0;net9.0;net10.0`** (net6/7 dropped — EOL). Per-package override where a dependency forces it — e.g. **`Http.OpenApi` is `net10.0`-only** (`Microsoft.AspNetCore.OpenApi`).
+- TFM: **`net10.0`**, single-target, declared once in the root props. net6/7/8/9 were dropped as they reached EOL — net9 in May 2026, net8 in November 2026. **No per-package override**: `Http.Exception` carried `net9.0;net10.0` for `ExceptionHandlerOptions.StatusCodeSelector` and `Http.OpenApi` was already `net10.0`-only for the native OpenAPI pipeline, and both restrictions stop being exceptions once the floor is net10. Being single-target is also what collapsed the per-TFM `PackageVersion Update` blocks in `Directory.Packages.props`, so there is now **one** version of every package — do not reintroduce either.
 - ASP.NET Core deps via **`<FrameworkReference Include="Microsoft.AspNetCore.App" />`** (not the metapackage), so packages stay framework-aligned without pinning a runtime version.
 - Tests: **xUnit v4 (the `xunit.v3` package, 4.x) on Microsoft.Testing.Platform v2 (MTP)** — test projects are `OutputType=Exe`, and `dotnet test` runs MTP because the root **`global.json`** opts in (`"test": { "runner": "Microsoft.Testing.Platform" }`). MTP v2 dropped the VSTest bridge, so `TestingPlatformDotnetTestSupport` is gone and running the tests needs the **.NET 10 SDK**. Not MSTest, not VSTest.
 - Source is **UTF-8 without BOM** (`.editorconfig` `charset = utf-8`). camelCase locals, PascalCase types, I-prefixed interfaces. Copyright year stays **2023** (deliberate — don't bump).
@@ -17,7 +17,7 @@ ASP.NET Core building blocks — request/response abstractions, exception handli
 
 ## Dependencies — two kinds
 
-- **Cross-repo, on shared-net** (e.g. `Http.Exception` → `JorgeCostaMacia.Exception`, `Http` → `GuidFactory`): these are **`PackageReference` to the published shared-net packages**, version-pinned centrally in `Directory.Packages.props`. shared-net is a separate repo — never `ProjectReference` across repos. (The logging packages depend on the public `Serilog` / `Serilog.AspNetCore`, not on `JorgeCostaMacia.Serilog`.)
+- **Cross-repo, on shared-net** (e.g. `Http.Exception` → `JorgeCostaMacia.Exception`): these are **`PackageReference` to the published shared-net packages**, version-pinned centrally in `Directory.Packages.props`. shared-net is a separate repo — never `ProjectReference` across repos. (The logging packages depend on the public `Serilog` / `Serilog.AspNetCore`, not on `JorgeCostaMacia.Serilog`.)
 - **Intra-repo, between `Http.*` packages** (e.g. `Http.ProblemDetails` → `Http`): **`ProjectReference`**. `dotnet pack` turns each `ProjectReference` into a NuGet `<dependency>` at the sibling's version, so the graph still ships in the nuspec — but you build against local source and **release everything together** (no phased, tier-by-tier publishing). Don't reintroduce `PackageReference` between same-repo packages.
 
 ## Dependencies — Central Package Management
@@ -80,4 +80,4 @@ dotnet test   http-net.slnx -c Release       # MTP v2 via global.json (needs the
 dotnet pack   http-net.slnx -c Release        # packs all packable; tests are IsPackable=false
 ```
 
-Run **`dotnet format` before committing** — it applies the `.editorconfig` (using ordering, whitespace), the CLI equivalent of Visual Studio's *Code Cleanup*, so generated code doesn't drift from what the IDE would produce.
+Run **`dotnet format` before committing** — it applies the `.editorconfig` (using ordering, whitespace), the CLI equivalent of Visual Studio's *Code Cleanup*, so generated code doesn't drift from what the IDE would produce. `develop.yml` runs the `--verify-no-changes` form next to the explicit-types grep guard, so skipping it fails CI rather than landing quietly — whitespace and using order are not analyzer diagnostics and compile with zero warnings.

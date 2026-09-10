@@ -60,7 +60,7 @@ public abstract record ResponseHttp : IResponseHttp
     /// </summary>
     /// <param name="aggregateId">
     /// The aggregate root identifier. If <c>null</c>, a new <see cref="Guid"/> will be generated
-    /// by the GuidFactory (time-ordered UUIDv7 on .NET 9+, UUIDv4 on .NET 8).
+    /// as a time-ordered UUIDv7 (<see cref="Guid.CreateVersion7()"/>).
     /// </param>
     /// <param name="aggregateCorrelationId">
     /// The correlation identifier. If <c>null</c>, it defaults to the value of <paramref name="aggregateId"/>.
@@ -70,7 +70,7 @@ public abstract record ResponseHttp : IResponseHttp
     /// </param>
     protected ResponseHttp(Guid? aggregateId, Guid? aggregateCorrelationId, DateTime? aggregateOccurredAt)
     {
-        AggregateId = aggregateId ?? GuidFactory.Domain.GuidFactory.Create();
+        AggregateId = aggregateId ?? Guid.CreateVersion7();
         AggregateCorrelationId = aggregateCorrelationId ?? AggregateId;
         AggregateOccurredAt = aggregateOccurredAt ?? DateTime.UtcNow;
     }
