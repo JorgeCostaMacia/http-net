@@ -34,7 +34,7 @@ The `ProblemDetails` record (implementing `IResponseHttp`) is also provided as t
 
 ## Requirements
 
-One of the following SDKs: **.NET 8 / 9 / 10** *(.NET 10 recommended)*.
+The **.NET 10** SDK.
 
 Depends on [JorgeCostaMacia.Http](https://www.nuget.org/packages/JorgeCostaMacia.Http/), [JorgeCostaMacia.Exception](https://www.nuget.org/packages/JorgeCostaMacia.Exception/) and the ASP.NET Core shared framework.
 

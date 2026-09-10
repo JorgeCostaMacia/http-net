@@ -35,7 +35,7 @@ The request-completion event is logged at **Error** for exceptions / 5xx, **Warn
 
 ## Requirements
 
-One of the following SDKs: **.NET 8 / 9 / 10** *(.NET 10 recommended)*.
+The **.NET 10** SDK.
 
 Depends on [Serilog.AspNetCore](https://www.nuget.org/packages/Serilog.AspNetCore/) and the ASP.NET Core shared framework.
 

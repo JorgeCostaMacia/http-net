@@ -50,7 +50,7 @@ Programming-error exceptions (`ArgumentException`, `InvalidOperationException`â€
 
 ## Requirements
 
-One of the following SDKs: **.NET 9 / 10** *(.NET 10 recommended)* â€” `StatusCodeSelector` requires ASP.NET Core 9+.
+The **.NET 10** SDK.
 
 Depends on [JorgeCostaMacia.Exception](https://www.nuget.org/packages/JorgeCostaMacia.Exception/) and the ASP.NET Core shared framework.
 

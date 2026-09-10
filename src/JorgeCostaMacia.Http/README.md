@@ -32,15 +32,14 @@ using JorgeCostaMacia.Http.Domain;
 public sealed record CreateCustomerRequest(string Name)
     : RequestHttp(aggregateId: null, aggregateCorrelationId: null, aggregateOccurredAt: null);
 
-// metadata is auto-filled: AggregateId (via GuidFactory — UUIDv7 on .NET 9+, v4 on .NET 8),
+// metadata is auto-filled: AggregateId (a time-ordered UUIDv7),
 // AggregateCorrelationId (defaults to AggregateId), AggregateOccurredAt (UTC).
 ```
 
 ## Requirements
 
-One of the following SDKs: **.NET 8 / 9 / 10** *(.NET 10 recommended)*.
+The **.NET 10** SDK.
 
-Depends on [JorgeCostaMacia.GuidFactory](https://www.nuget.org/packages/JorgeCostaMacia.GuidFactory/).
 
 ## About
 

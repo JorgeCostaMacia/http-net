@@ -35,7 +35,7 @@ Configures URL-segment versioning (e.g. `/v1/resource`): sets the default versio
 
 ## Requirements
 
-One of the following SDKs: **.NET 8 / 9 / 10** *(.NET 10 recommended)*.
+The **.NET 10** SDK.
 
 Depends on [Asp.Versioning.Http](https://www.nuget.org/packages/Asp.Versioning.Http/) and [Asp.Versioning.Mvc.ApiExplorer](https://www.nuget.org/packages/Asp.Versioning.Mvc.ApiExplorer/).
 
