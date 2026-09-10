@@ -92,7 +92,7 @@ public class RequestLoggingOptionsExtensionsTests
         DefaultHttpContext context = new DefaultHttpContext();
         context.User = new System.Security.Claims.ClaimsPrincipal(
             new System.Security.Claims.ClaimsIdentity(
-                new[] { new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name, "jcosta") },
+                new System.Security.Claims.Claim[] { new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name, "jcosta") },
                 "test"));
 
         Configured().EnrichDiagnosticContext!(diagnostics, context);
