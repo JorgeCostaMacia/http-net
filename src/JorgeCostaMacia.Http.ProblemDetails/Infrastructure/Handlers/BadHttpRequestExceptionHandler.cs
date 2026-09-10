@@ -66,8 +66,14 @@ internal static class BadHttpRequestExceptionHandler
     /// <param name="namingPolicy">The naming policy used to convert field names.</param>
     private static void HandleMissingProperties(Microsoft.AspNetCore.Http.ProblemDetailsContext ctx, JsonException exception, JsonNamingPolicy namingPolicy)
     {
+        // Only the part after "including" carries the field names. The type name is quoted too — the
+        // message reads: type 'Sample' was missing required properties including: 'first'; 'last'. — so
+        // scanning the whole message reported the type itself as a missing field.
+        int listStart = exception.Message.IndexOf("including", StringComparison.Ordinal);
+        string fieldList = listStart >= 0 ? exception.Message[listStart..] : exception.Message;
+
         List<string> missings = System.Text.RegularExpressions.Regex
-            .Matches(exception.Message, @"'([^']*)'|\[([^\]]*)\]")
+            .Matches(fieldList, @"'([^']*)'|\[([^\]]*)\]")
             .Select(m => m.Groups[1].Success ? m.Groups[1].Value : m.Groups[2].Value)
             .Where(f => !string.IsNullOrWhiteSpace(f) && f != "request" && !f.Contains('.'))
             .ToList();
