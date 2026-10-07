@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Description>Default forwarded-headers policy for a service behind a reverse proxy on the same host or Docker's default bridge, as an options extension applied from the host's Configure&lt;ForwardedHeadersOptions&gt;</Description>
+		<PackageTags>http,forwardedheaders,proxy,docker,aspnetcore,x-forwarded-for</PackageTags>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+</Project>
