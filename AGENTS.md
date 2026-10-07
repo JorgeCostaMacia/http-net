@@ -1,6 +1,6 @@
 # http-net — working in this repo
 
-ASP.NET Core building blocks — request/response abstractions, exception handling, ProblemDetails, OpenAPI, API versioning and Serilog request logging — each scoped to a single concern and shipped independently on NuGet under `JorgeCostaMacia.Http.*`. Part of the `JorgeCostaMacia.*` family, on top of the **shared-net** foundation (consumed as published NuGet packages).
+ASP.NET Core building blocks — request/response abstractions, exception handling, ProblemDetails, OpenAPI, API versioning, forwarded headers and Serilog request logging — each scoped to a single concern and shipped independently on NuGet under `JorgeCostaMacia.Http.*`. Part of the `JorgeCostaMacia.*` family, on top of the **shared-net** foundation (consumed as published NuGet packages).
 
 ## Layout
 
