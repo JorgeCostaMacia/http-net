@@ -10,11 +10,48 @@ using Microsoft.Extensions.Logging;
 
 namespace JorgeCostaMacia.Http.Exception.Tests;
 
-file sealed class TestNotFoundException() : NotFoundException(null, null, null, null, null, "missing", null);
+file sealed class TestNotFoundException : NotFoundException
+{
+    public TestNotFoundException() : base(
+        null,
+        null,
+        null,
+        null,
+        null,
+        "missing",
+        null
+    )
+    { }
+}
 
-file sealed class TestExistException() : ExistException(null, null, null, null, null, "duplicate", null);
+file sealed class TestExistException : ExistException
+{
+    public TestExistException() : base(
+        null,
+        null,
+        null,
+        null,
+        null,
+        "duplicate",
+        null
+    )
+    { }
+}
 
-file sealed class TestValidationException() : ValidationException(null, null, null, null, null, null, null, new List<ValidationFailure>());
+file sealed class TestValidationException : ValidationException
+{
+    public TestValidationException() : base(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        new List<ValidationFailure>()
+    )
+    { }
+}
 
 public class ExceptionHandlerOptionsExtensionsTests
 {
@@ -48,11 +85,17 @@ public class ExceptionHandlerOptionsExtensionsTests
 
     [Fact]
     public async Task FluentValidationException_MapsTo400()
-        => Assert.Equal(HttpStatusCode.BadRequest, (await Request(new FluentValidation.ValidationException(new List<ValidationFailure>()))).StatusCode);
+        => Assert.Equal(
+            HttpStatusCode.BadRequest,
+            (await Request(new FluentValidation.ValidationException(new List<ValidationFailure>()))).StatusCode);
 
     [Fact]
     public async Task BadHttpRequestException_UsesItsOwnStatusCode()
-        => Assert.Equal(HttpStatusCode.UnsupportedMediaType, (await Request(new BadHttpRequestException("bad", StatusCodes.Status415UnsupportedMediaType))).StatusCode);
+        => Assert.Equal(
+            HttpStatusCode.UnsupportedMediaType,
+            (await Request(new BadHttpRequestException(
+                "bad",
+                StatusCodes.Status415UnsupportedMediaType))).StatusCode);
 
     [Fact]
     public async Task UnauthorizedAccessException_MapsTo403()
@@ -72,5 +115,7 @@ public class ExceptionHandlerOptionsExtensionsTests
 
     [Fact]
     public async Task UnexpectedException_MapsTo500()
-        => Assert.Equal(HttpStatusCode.InternalServerError, (await Request(new InvalidOperationException("crash"))).StatusCode);
+        => Assert.Equal(
+            HttpStatusCode.InternalServerError,
+            (await Request(new InvalidOperationException("crash"))).StatusCode);
 }

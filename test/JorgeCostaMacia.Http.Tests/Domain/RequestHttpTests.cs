@@ -4,14 +4,28 @@ namespace JorgeCostaMacia.Http.Tests.Domain;
 
 public class RequestHttpTests
 {
-    private sealed record TestRequest(Guid? Id, Guid? Correlation, DateTime? OccurredAt)
-        : RequestHttp(Id, Correlation, OccurredAt);
+    private sealed record TestRequest : RequestHttp
+    {
+        public TestRequest(
+            Guid? id,
+            Guid? correlation,
+            DateTime? occurredAt
+        ) : base(
+            id,
+            correlation,
+            occurredAt
+        )
+        { }
+    }
 
     [Fact]
     public void Defaults_GenerateIdCorrelationAndUtcTimestamp()
     {
         DateTime before = DateTime.UtcNow;
-        TestRequest request = new TestRequest(null, null, null);
+        TestRequest request = new TestRequest(
+            null,
+            null,
+            null);
 
         Assert.NotEqual(Guid.Empty, request.AggregateId);
         Assert.Equal(request.AggregateId, request.AggregateCorrelationId);
@@ -25,7 +39,10 @@ public class RequestHttpTests
     {
         Guid id = Guid.NewGuid();
 
-        TestRequest request = new TestRequest(id, null, null);
+        TestRequest request = new TestRequest(
+            id,
+            null,
+            null);
 
         Assert.Equal(id, request.AggregateCorrelationId);
     }
@@ -37,7 +54,10 @@ public class RequestHttpTests
         Guid correlation = Guid.NewGuid();
         DateTime occurredAt = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-        TestRequest request = new TestRequest(id, correlation, occurredAt);
+        TestRequest request = new TestRequest(
+            id,
+            correlation,
+            occurredAt);
 
         Assert.Equal(id, request.AggregateId);
         Assert.Equal(correlation, request.AggregateCorrelationId);

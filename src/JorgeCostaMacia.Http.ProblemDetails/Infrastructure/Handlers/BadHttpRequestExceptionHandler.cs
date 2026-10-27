@@ -17,23 +17,31 @@ internal static class BadHttpRequestExceptionHandler
     /// <see cref="JsonSerializerOptions.PropertyNamingPolicy"/>.
     /// </summary>
     /// <param name="ctx">The <see cref="Microsoft.AspNetCore.Http.ProblemDetailsContext"/> being customized.</param>
-    /// <param name="exception">The <see cref="Microsoft.AspNetCore.Http.BadHttpRequestException"/> being handled.</param>
+    /// <param name="exception">The <see cref="Microsoft.AspNetCore.Http.BadHttpRequestException"/> being
+    /// handled.</param>
     /// <param name="namingPolicy">The naming policy used to convert field names.</param>
-    public static void Handle(Microsoft.AspNetCore.Http.ProblemDetailsContext ctx, Microsoft.AspNetCore.Http.BadHttpRequestException exception, JsonNamingPolicy namingPolicy)
+    public static void Handle(
+        Microsoft.AspNetCore.Http.ProblemDetailsContext ctx,
+        Microsoft.AspNetCore.Http.BadHttpRequestException exception,
+        JsonNamingPolicy namingPolicy
+    )
     {
         ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("AggregateId")] = null;
         ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("AggregateCode")] = null;
         ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("AggregateType")] = null;
 
-        if (exception.InnerException is JsonException jsonExceptionMissing && jsonExceptionMissing.Message.Contains("missing required properties"))
+        if (exception.InnerException is JsonException jsonExceptionMissing
+            && jsonExceptionMissing.Message.Contains("missing required properties"))
         {
             HandleMissingProperties(ctx, jsonExceptionMissing, namingPolicy);
         }
-        else if (exception.InnerException is JsonException jsonExceptionInvalid && !string.IsNullOrEmpty(jsonExceptionInvalid.Path))
+        else if (exception.InnerException is JsonException jsonExceptionInvalid
+            && !string.IsNullOrEmpty(jsonExceptionInvalid.Path))
         {
             HandleInvalidProperties(ctx, jsonExceptionInvalid, namingPolicy);
         }
-        else if ((exception.Message.Contains("Required parameter") && exception.Message.Contains("was not provided from body."))
+        else if ((exception.Message.Contains("Required parameter")
+                && exception.Message.Contains("was not provided from body."))
             || exception.Message.Contains("no body was provided"))
         {
             ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("Errors")] = new Dictionary<string, string[]>
@@ -41,11 +49,15 @@ internal static class BadHttpRequestExceptionHandler
                 { namingPolicy.ConvertName("Request"), new string[] { "A non-empty request body is required." } }
             };
         }
-        else if (exception.Message.Contains("Failed to read parameter") && exception.Message.Contains("from the request body as JSON."))
+        else if (exception.Message.Contains("Failed to read parameter")
+            && exception.Message.Contains("from the request body as JSON."))
         {
             ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("Errors")] = new Dictionary<string, string[]>
             {
-                { namingPolicy.ConvertName("Request"), new string[] { "One or more fields have an invalid data type format." } }
+                {
+                    namingPolicy.ConvertName("Request"),
+                    new string[] { "One or more fields have an invalid data type format." }
+                }
             };
         }
         else
@@ -64,7 +76,11 @@ internal static class BadHttpRequestExceptionHandler
     /// <param name="ctx">The <see cref="Microsoft.AspNetCore.Http.ProblemDetailsContext"/> being customized.</param>
     /// <param name="exception">The inner <see cref="JsonException"/> reporting the missing properties.</param>
     /// <param name="namingPolicy">The naming policy used to convert field names.</param>
-    private static void HandleMissingProperties(Microsoft.AspNetCore.Http.ProblemDetailsContext ctx, JsonException exception, JsonNamingPolicy namingPolicy)
+    private static void HandleMissingProperties(
+        Microsoft.AspNetCore.Http.ProblemDetailsContext ctx,
+        JsonException exception,
+        JsonNamingPolicy namingPolicy
+    )
     {
         // Only the part after "including" carries the field names. The type name is quoted too — the
         // message reads: type 'Sample' was missing required properties including: 'first'; 'last'. — so
@@ -82,8 +98,7 @@ internal static class BadHttpRequestExceptionHandler
         {
             ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("Errors")] = missings.ToDictionary(
                 field => namingPolicy.ConvertName(field),
-                field => new string[] { $"'{namingPolicy.ConvertName(field)}' must be present." }
-            );
+                field => new string[] { $"'{namingPolicy.ConvertName(field)}' must be present." });
         }
         else
         {
@@ -102,7 +117,11 @@ internal static class BadHttpRequestExceptionHandler
     /// <param name="ctx">The <see cref="Microsoft.AspNetCore.Http.ProblemDetailsContext"/> being customized.</param>
     /// <param name="exception">The inner <see cref="JsonException"/> reporting the invalid path.</param>
     /// <param name="namingPolicy">The naming policy used to convert field names.</param>
-    private static void HandleInvalidProperties(Microsoft.AspNetCore.Http.ProblemDetailsContext ctx, JsonException exception, JsonNamingPolicy namingPolicy)
+    private static void HandleInvalidProperties(
+        Microsoft.AspNetCore.Http.ProblemDetailsContext ctx,
+        JsonException exception,
+        JsonNamingPolicy namingPolicy
+    )
     {
         string? fieldRaw = exception.Path?.Split('.').LastOrDefault()?.TrimStart('$');
 
@@ -119,7 +138,10 @@ internal static class BadHttpRequestExceptionHandler
         {
             ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("Errors")] = new Dictionary<string, string[]>
             {
-                { namingPolicy.ConvertName("Request"), new string[] { "One or more fields have an invalid data type format." } }
+                {
+                    namingPolicy.ConvertName("Request"),
+                    new string[] { "One or more fields have an invalid data type format." }
+                }
             };
         }
     }

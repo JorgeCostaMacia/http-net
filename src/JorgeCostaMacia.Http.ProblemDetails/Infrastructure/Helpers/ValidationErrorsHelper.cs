@@ -19,11 +19,17 @@ internal static class ValidationErrorsHelper
     /// <param name="failures">The validation failures to render.</param>
     /// <param name="namingPolicy">The naming policy used to convert field names.</param>
     /// <returns>A dictionary mapping each (policy-converted) property name to its error messages.</returns>
-    public static Dictionary<string, string[]> Build(IEnumerable<ValidationFailure> failures, JsonNamingPolicy namingPolicy)
+    public static Dictionary<string, string[]> Build(
+        IEnumerable<ValidationFailure> failures,
+        JsonNamingPolicy namingPolicy
+    )
         => failures
             .GroupBy(failure => namingPolicy.ConvertName(failure.PropertyName))
             .ToDictionary(
                 group => group.Key,
-                group => group.Select(failure => failure.ErrorMessage.Replace($"'{failure.PropertyName}'", $"'{namingPolicy.ConvertName(failure.PropertyName)}'")).ToArray()
-            );
+                group => group
+                    .Select(failure => failure.ErrorMessage.Replace(
+                        $"'{failure.PropertyName}'",
+                        $"'{namingPolicy.ConvertName(failure.PropertyName)}'"))
+                    .ToArray());
 }

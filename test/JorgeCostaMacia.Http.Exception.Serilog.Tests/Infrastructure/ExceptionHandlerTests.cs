@@ -6,27 +6,47 @@ using Microsoft.Extensions.Logging;
 
 namespace JorgeCostaMacia.Http.Exception.Serilog.Tests.Infrastructure;
 
-file sealed class TestDomainException(string? message = null)
-    : DomainException(null, null, null, null, null, message, null);
+file sealed class TestDomainException : DomainException
+{
+    public TestDomainException(string? message = null) : base(
+        null,
+        null,
+        null,
+        null,
+        null,
+        message,
+        null
+    )
+    { }
+}
 
 public class ExceptionHandlerTests
 {
     private sealed class LoggerFake : ILogger<ExceptionHandler>
     {
-        public List<(LogLevel Level, System.Exception? Exception)> Logged { get; } = new List<(LogLevel Level, System.Exception? Exception)>();
+        public List<(LogLevel Level, System.Exception? Exception)> Logged { get; } =
+            new List<(LogLevel Level, System.Exception? Exception)>();
 
         public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
 
         public bool IsEnabled(LogLevel logLevel) => true;
 
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, System.Exception? exception, Func<TState, System.Exception?, string> formatter)
-            => Logged.Add((logLevel, exception));
+        public void Log<TState>(
+            LogLevel logLevel,
+            EventId eventId,
+            TState state,
+            System.Exception? exception,
+            Func<TState, System.Exception?, string> formatter
+        ) => Logged.Add((logLevel, exception));
     }
 
     private readonly LoggerFake _logger = new LoggerFake();
 
     private async Task<bool> Handle(System.Exception exception)
-        => await new ExceptionHandler(_logger).TryHandleAsync(new DefaultHttpContext(), exception, TestContext.Current.CancellationToken);
+        => await new ExceptionHandler(_logger).TryHandleAsync(
+            new DefaultHttpContext(),
+            exception,
+            TestContext.Current.CancellationToken);
 
     [Fact]
     public async Task DomainException_LogsWarning()

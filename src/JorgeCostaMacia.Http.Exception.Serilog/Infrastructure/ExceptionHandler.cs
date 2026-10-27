@@ -42,7 +42,11 @@ public sealed class ExceptionHandler : IExceptionHandler
     /// <param name="exception">The unhandled exception being logged.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns><see langword="false"/>, always.</returns>
-    public ValueTask<bool> TryHandleAsync(HttpContext httpContext, System.Exception exception, CancellationToken cancellationToken)
+    public ValueTask<bool> TryHandleAsync(
+        HttpContext httpContext,
+        System.Exception exception,
+        CancellationToken cancellationToken
+    )
     {
         DomainException? domainEx = exception as DomainException;
 

@@ -40,11 +40,15 @@ public static class ProblemDetailsOptionsExtensions
 
     private static void Customize(Microsoft.AspNetCore.Http.ProblemDetailsContext context)
     {
-        JsonNamingPolicy namingPolicy = context.HttpContext.RequestServices.GetRequiredService<IOptions<JsonOptions>>().Value.SerializerOptions.PropertyNamingPolicy ?? JsonNamingPolicy.CamelCase;
+        JsonNamingPolicy namingPolicy = context.HttpContext.RequestServices
+            .GetRequiredService<IOptions<JsonOptions>>()
+            .Value.SerializerOptions.PropertyNamingPolicy
+            ?? JsonNamingPolicy.CamelCase;
 
         context.ProblemDetails.Instance = $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
         context.ProblemDetails.Extensions[namingPolicy.ConvertName("RequestId")] = context.HttpContext.TraceIdentifier;
-        context.ProblemDetails.Extensions[namingPolicy.ConvertName("TraceId")] = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity?.TraceId.ToString();
+        context.ProblemDetails.Extensions[namingPolicy.ConvertName("TraceId")] =
+            context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity?.TraceId.ToString();
         context.ProblemDetails.Extensions[namingPolicy.ConvertName("NodeId")] = Environment.MachineName;
 
         if (context.Exception is DomainException domainEx)
