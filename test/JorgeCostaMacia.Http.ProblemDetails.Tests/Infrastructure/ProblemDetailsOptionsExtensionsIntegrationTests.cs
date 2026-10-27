@@ -13,12 +13,36 @@ using Microsoft.Extensions.Logging;
 namespace JorgeCostaMacia.Http.ProblemDetails.Tests.Infrastructure;
 
 // concrete subclasses: the family exceptions carry protected ctors (one per aggregate in real code).
-file sealed class TestDomainException() : DomainException(null, null, null, null, null, "boom", null);
+file sealed class TestDomainException : DomainException
+{
+    public TestDomainException() : base(
+        null,
+        null,
+        null,
+        null,
+        null,
+        "boom",
+        null
+    )
+    { }
+}
 
 // a compound property name ("FirstName") is the discriminator: only a real ConvertName pass turns its
 // key into "first_name" and rewrites the quoted name inside the message.
-file sealed class TestValidationException()
-    : ValidationException(null, null, null, null, null, null, null, new List<ValidationFailure> { new ValidationFailure("FirstName", "'FirstName' is invalid") });
+file sealed class TestValidationException : ValidationException
+{
+    public TestValidationException() : base(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        new List<ValidationFailure> { new ValidationFailure("FirstName", "'FirstName' is invalid") }
+    )
+    { }
+}
 
 file sealed record Payload(int Value);
 
@@ -55,7 +79,10 @@ public class ProblemDetailsOptionsExtensionsIntegrationTests
         app.UseExceptionHandler();
         app.MapGet("/domain", void () => throw new TestDomainException());
         app.MapGet("/domain-validation", void () => throw new TestValidationException());
-        app.MapGet("/fluent-validation", void () => throw new FluentValidation.ValidationException(new List<ValidationFailure> { new ValidationFailure("FirstName", "'FirstName' is invalid") }));
+        app.MapGet(
+            "/fluent-validation",
+            void () => throw new FluentValidation.ValidationException(
+                new List<ValidationFailure> { new ValidationFailure("FirstName", "'FirstName' is invalid") }));
         app.MapGet("/boom", void () => throw new InvalidOperationException("crash"));
         app.MapPost("/typed", (Payload payload) => Results.Ok(payload));
 
@@ -122,7 +149,9 @@ public class ProblemDetailsOptionsExtensionsIntegrationTests
         (WebApplication app, HttpClient client) = await App();
         await using (app)
         {
-            HttpResponseMessage response = await client.GetAsync("/domain-validation", TestContext.Current.CancellationToken);
+            HttpResponseMessage response = await client.GetAsync(
+                "/domain-validation",
+                TestContext.Current.CancellationToken);
 
             JsonElement errors = (await Body(response)).GetProperty("errors");
             Assert.Equal("'first_name' is invalid", errors.GetProperty("first_name")[0].GetString());
@@ -135,7 +164,9 @@ public class ProblemDetailsOptionsExtensionsIntegrationTests
         (WebApplication app, HttpClient client) = await App();
         await using (app)
         {
-            HttpResponseMessage response = await client.GetAsync("/fluent-validation", TestContext.Current.CancellationToken);
+            HttpResponseMessage response = await client.GetAsync(
+                "/fluent-validation",
+                TestContext.Current.CancellationToken);
 
             JsonElement errors = (await Body(response)).GetProperty("errors");
             Assert.Equal("'first_name' is invalid", errors.GetProperty("first_name")[0].GetString());
@@ -162,7 +193,10 @@ public class ProblemDetailsOptionsExtensionsIntegrationTests
         (WebApplication app, HttpClient client) = await App();
         await using (app)
         {
-            HttpResponseMessage response = await client.PostAsync("/typed", new StringContent("{\"value\":\"x\"}", Encoding.UTF8, "application/json"), TestContext.Current.CancellationToken);
+            HttpResponseMessage response = await client.PostAsync(
+                "/typed",
+                new StringContent("{\"value\":\"x\"}", Encoding.UTF8, "application/json"),
+                TestContext.Current.CancellationToken);
 
             JsonElement errors = (await Body(response)).GetProperty("errors");
             Assert.Equal("'value' has an invalid data type format.", errors.GetProperty("value")[0].GetString());
@@ -178,7 +212,10 @@ public class ProblemDetailsOptionsExtensionsIntegrationTests
         (WebApplication app, HttpClient client) = await App();
         await using (app)
         {
-            HttpResponseMessage response = await client.PostAsync("/typed", new StringContent("", Encoding.UTF8, "application/json"), TestContext.Current.CancellationToken);
+            HttpResponseMessage response = await client.PostAsync(
+                "/typed",
+                new StringContent("", Encoding.UTF8, "application/json"),
+                TestContext.Current.CancellationToken);
 
             JsonElement errors = (await Body(response)).GetProperty("errors");
             Assert.Equal("A non-empty request body is required.", errors.GetProperty("request")[0].GetString());

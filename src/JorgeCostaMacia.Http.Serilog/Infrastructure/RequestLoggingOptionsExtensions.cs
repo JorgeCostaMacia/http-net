@@ -22,11 +22,12 @@ public static class RequestLoggingOptionsExtensions
     /// <returns>The same <paramref name="options"/>, for chaining.</returns>
     public static RequestLoggingOptions WithDefaults(this RequestLoggingOptions options)
     {
-        options.EnrichDiagnosticContext = (diagnosticContext, httpContext) => diagnosticContext.Set("UserName", httpContext.User?.Identity?.Name ?? "anonymous");
+        options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+            diagnosticContext.Set("UserName", httpContext.User?.Identity?.Name ?? "anonymous");
 
         options.GetLevel = (httpContext, elapsed, ex) =>
         {
-            if (ex != null)
+            if (ex is not null)
             {
                 return LogEventLevel.Error;
             }

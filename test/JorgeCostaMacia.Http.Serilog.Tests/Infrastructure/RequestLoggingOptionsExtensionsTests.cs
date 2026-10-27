@@ -40,7 +40,9 @@ public class RequestLoggingOptionsExtensionsTests
     // already written with a 2xx.
     [Fact]
     public void GetLevel_WithAnException_IsError()
-        => Assert.Equal(LogEventLevel.Error, Configured().GetLevel(ContextWith(200), 0, new InvalidOperationException("boom")));
+        => Assert.Equal(
+            LogEventLevel.Error,
+            Configured().GetLevel(ContextWith(200), 0, new InvalidOperationException("boom")));
 
     [Theory]
     [InlineData(500)]
@@ -92,7 +94,10 @@ public class RequestLoggingOptionsExtensionsTests
         DefaultHttpContext context = new DefaultHttpContext();
         context.User = new System.Security.Claims.ClaimsPrincipal(
             new System.Security.Claims.ClaimsIdentity(
-                new System.Security.Claims.Claim[] { new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name, "jcosta") },
+                new System.Security.Claims.Claim[]
+                {
+                    new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name, "jcosta")
+                },
                 "test"));
 
         Configured().EnrichDiagnosticContext!(diagnostics, context);
@@ -105,8 +110,11 @@ public class RequestLoggingOptionsExtensionsTests
     {
         public Dictionary<string, object?> Values { get; } = new Dictionary<string, object?>();
 
-        public void Set(string propertyName, object? value, bool destructureObjects = false)
-            => Values[propertyName] = value;
+        public void Set(
+            string propertyName,
+            object? value,
+            bool destructureObjects = false
+        ) => Values[propertyName] = value;
 
         public void SetException(System.Exception exception) => Values["Exception"] = exception;
     }

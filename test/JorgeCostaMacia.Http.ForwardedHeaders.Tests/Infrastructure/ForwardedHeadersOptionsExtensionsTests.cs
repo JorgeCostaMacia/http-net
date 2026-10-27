@@ -18,7 +18,11 @@ public class ForwardedHeadersOptionsExtensionsTests
 
     [Fact]
     public void WithDefaults_HonoursForHostAndProto()
-        => Assert.Equal(ForwardedHeaderFlags.XForwardedFor | ForwardedHeaderFlags.XForwardedHost | ForwardedHeaderFlags.XForwardedProto, new ForwardedHeadersOptions().WithDefaults().ForwardedHeaders);
+        => Assert.Equal(
+            ForwardedHeaderFlags.XForwardedFor
+                | ForwardedHeaderFlags.XForwardedHost
+                | ForwardedHeaderFlags.XForwardedProto,
+            new ForwardedHeadersOptions().WithDefaults().ForwardedHeaders);
 
     [Fact]
     public void WithDefaults_TrustsTheLoopbacks()
@@ -32,7 +36,9 @@ public class ForwardedHeadersOptionsExtensionsTests
 
     [Fact]
     public void WithDefaults_TrustsDockersDefaultBridge()
-        => Assert.Contains(new IPNetwork(IPAddress.Parse("172.17.0.0"), 16), new ForwardedHeadersOptions().WithDefaults().KnownIPNetworks);
+        => Assert.Contains(
+            new IPNetwork(IPAddress.Parse("172.17.0.0"), 16),
+            new ForwardedHeadersOptions().WithDefaults().KnownIPNetworks);
 
     // added to the framework's trusted addresses, never in their place
     [Fact]

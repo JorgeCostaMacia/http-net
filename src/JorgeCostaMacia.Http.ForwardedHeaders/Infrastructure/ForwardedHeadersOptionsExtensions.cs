@@ -14,7 +14,8 @@ namespace JorgeCostaMacia.Http.ForwardedHeaders.Infrastructure;
 /// </summary>
 public static class ForwardedHeadersOptionsExtensions
 {
-    /// <summary>Docker's default bridge network (<c>docker0</c>), the address a proxy on the host reaches a published container from.</summary>
+    /// <summary>Docker's default bridge network (<c>docker0</c>), the address a proxy on the host reaches a published
+    /// container from.</summary>
     private static readonly IPNetwork _dockerBridgeNetwork = new IPNetwork(IPAddress.Parse("172.17.0.0"), 16);
 
     /// <summary>
@@ -37,7 +38,9 @@ public static class ForwardedHeadersOptionsExtensions
         options.KnownProxies.Add(IPAddress.IPv6Loopback);
         options.KnownIPNetworks.Add(_dockerBridgeNetwork);
 
-        options.ForwardedHeaders = ForwardedHeaderFlags.XForwardedHost | ForwardedHeaderFlags.XForwardedFor | ForwardedHeaderFlags.XForwardedProto;
+        options.ForwardedHeaders = ForwardedHeaderFlags.XForwardedHost
+            | ForwardedHeaderFlags.XForwardedFor
+            | ForwardedHeaderFlags.XForwardedProto;
 
         return options;
     }

@@ -27,7 +27,10 @@ public class BadHttpRequestExceptionHandlerTests
         // a runtime rewording (or another version's message) must not silently drop the field
         Microsoft.AspNetCore.Http.ProblemDetailsContext ctx = Context();
 
-        BadHttpRequestExceptionHandler.Handle(ctx, new BadHttpRequestException("some future wording"), JsonNamingPolicy.CamelCase);
+        BadHttpRequestExceptionHandler.Handle(
+            ctx,
+            new BadHttpRequestException("some future wording"),
+            JsonNamingPolicy.CamelCase);
 
         Assert.True(ctx.ProblemDetails.Extensions.ContainsKey("errors"));
         Assert.Null(ctx.ProblemDetails.Extensions["errors"]);
@@ -38,9 +41,13 @@ public class BadHttpRequestExceptionHandlerTests
     {
         Microsoft.AspNetCore.Http.ProblemDetailsContext ctx = Context();
 
-        BadHttpRequestExceptionHandler.Handle(ctx, new BadHttpRequestException("Required parameter \"TestRequest request\" was not provided from body."), JsonNamingPolicy.CamelCase);
+        BadHttpRequestExceptionHandler.Handle(
+            ctx,
+            new BadHttpRequestException("Required parameter \"TestRequest request\" was not provided from body."),
+            JsonNamingPolicy.CamelCase);
 
-        Dictionary<string, string[]> errors = Assert.IsType<Dictionary<string, string[]>>(ctx.ProblemDetails.Extensions["errors"]);
+        Dictionary<string, string[]> errors =
+            Assert.IsType<Dictionary<string, string[]>>(ctx.ProblemDetails.Extensions["errors"]);
         Assert.Equal("A non-empty request body is required.", Assert.Single(errors["request"]));
     }
 
@@ -50,9 +57,13 @@ public class BadHttpRequestExceptionHandlerTests
         // .NET 10 reworded the empty-body case to "Implicit body inferred ... but no body was provided."
         Microsoft.AspNetCore.Http.ProblemDetailsContext ctx = Context();
 
-        BadHttpRequestExceptionHandler.Handle(ctx, new BadHttpRequestException("Implicit body inferred for parameter \"request\" but no body was provided. Did you mean to use a Service instead?"), JsonNamingPolicy.CamelCase);
+        BadHttpRequestExceptionHandler.Handle(
+            ctx,
+            new BadHttpRequestException("Implicit body inferred for parameter \"request\" but no body was provided. Did you mean to use a Service instead?"),
+            JsonNamingPolicy.CamelCase);
 
-        Dictionary<string, string[]> errors = Assert.IsType<Dictionary<string, string[]>>(ctx.ProblemDetails.Extensions["errors"]);
+        Dictionary<string, string[]> errors =
+            Assert.IsType<Dictionary<string, string[]>>(ctx.ProblemDetails.Extensions["errors"]);
         Assert.Equal("A non-empty request body is required.", Assert.Single(errors["request"]));
     }
 
@@ -61,9 +72,14 @@ public class BadHttpRequestExceptionHandlerTests
     {
         Microsoft.AspNetCore.Http.ProblemDetailsContext ctx = Context();
 
-        BadHttpRequestExceptionHandler.Handle(ctx, new BadHttpRequestException("Failed to read parameter \"TestRequest request\" from the request body as JSON."), JsonNamingPolicy.CamelCase);
+        BadHttpRequestExceptionHandler.Handle(
+            ctx,
+            new BadHttpRequestException(
+                "Failed to read parameter \"TestRequest request\" from the request body as JSON."),
+            JsonNamingPolicy.CamelCase);
 
-        Dictionary<string, string[]> errors = Assert.IsType<Dictionary<string, string[]>>(ctx.ProblemDetails.Extensions["errors"]);
+        Dictionary<string, string[]> errors =
+            Assert.IsType<Dictionary<string, string[]>>(ctx.ProblemDetails.Extensions["errors"]);
         Assert.Equal("One or more fields have an invalid data type format.", Assert.Single(errors["request"]));
     }
     // The two JsonException paths. A real request on net10 lands in the wording branches instead, so
@@ -76,9 +92,15 @@ public class BadHttpRequestExceptionHandlerTests
         // The runtime's own wording, verified against System.Text.Json on net10: the type is quoted too.
         JsonException inner = new JsonException("JSON deserialization for type 'Sample' was missing required properties including: 'firstName'; 'lastName'.");
 
-        BadHttpRequestExceptionHandler.Handle(ctx, new BadHttpRequestException("bad", inner), JsonNamingPolicy.CamelCase);
+        BadHttpRequestExceptionHandler.Handle(
+            ctx,
+            new BadHttpRequestException(
+                "bad",
+                inner),
+            JsonNamingPolicy.CamelCase);
 
-        Dictionary<string, string[]> errors = Assert.IsType<Dictionary<string, string[]>>(ctx.ProblemDetails.Extensions["errors"]);
+        Dictionary<string, string[]> errors =
+            Assert.IsType<Dictionary<string, string[]>>(ctx.ProblemDetails.Extensions["errors"]);
         Assert.Equal(2, errors.Count);
         Assert.Equal("'firstName' must be present.", Assert.Single(errors["firstName"]));
         Assert.Equal("'lastName' must be present.", Assert.Single(errors["lastName"]));
@@ -92,9 +114,15 @@ public class BadHttpRequestExceptionHandlerTests
         Microsoft.AspNetCore.Http.ProblemDetailsContext ctx = Context();
         JsonException inner = new JsonException("JSON deserialization for type 'Sample' was missing required properties including: 'request'; 'nested.field'.");
 
-        BadHttpRequestExceptionHandler.Handle(ctx, new BadHttpRequestException("bad", inner), JsonNamingPolicy.CamelCase);
+        BadHttpRequestExceptionHandler.Handle(
+            ctx,
+            new BadHttpRequestException(
+                "bad",
+                inner),
+            JsonNamingPolicy.CamelCase);
 
-        Dictionary<string, string[]> errors = Assert.IsType<Dictionary<string, string[]>>(ctx.ProblemDetails.Extensions["errors"]);
+        Dictionary<string, string[]> errors =
+            Assert.IsType<Dictionary<string, string[]>>(ctx.ProblemDetails.Extensions["errors"]);
         Assert.Equal("One or more required fields are not present.", Assert.Single(errors["request"]));
     }
 
@@ -103,11 +131,21 @@ public class BadHttpRequestExceptionHandlerTests
     {
         Microsoft.AspNetCore.Http.ProblemDetailsContext ctx = Context();
         // A real path from the runtime: $.age for a field that failed to convert.
-        JsonException inner = new JsonException("The JSON value could not be converted to System.Int32.", "$.age", 0, 56);
+        JsonException inner = new JsonException(
+            "The JSON value could not be converted to System.Int32.",
+            "$.age",
+            0,
+            56);
 
-        BadHttpRequestExceptionHandler.Handle(ctx, new BadHttpRequestException("bad", inner), JsonNamingPolicy.CamelCase);
+        BadHttpRequestExceptionHandler.Handle(
+            ctx,
+            new BadHttpRequestException(
+                "bad",
+                inner),
+            JsonNamingPolicy.CamelCase);
 
-        Dictionary<string, string[]> errors = Assert.IsType<Dictionary<string, string[]>>(ctx.ProblemDetails.Extensions["errors"]);
+        Dictionary<string, string[]> errors =
+            Assert.IsType<Dictionary<string, string[]>>(ctx.ProblemDetails.Extensions["errors"]);
         Assert.Equal("'age' has an invalid data type format.", Assert.Single(errors["age"]));
     }
 
@@ -116,11 +154,21 @@ public class BadHttpRequestExceptionHandlerTests
     public void Handle_InvalidPropertyType_WithNoFieldInThePath_FallsBackToOneRequestError()
     {
         Microsoft.AspNetCore.Http.ProblemDetailsContext ctx = Context();
-        JsonException inner = new JsonException("The JSON value could not be converted.", "$.", 0, 0);
+        JsonException inner = new JsonException(
+            "The JSON value could not be converted.",
+            "$.",
+            0,
+            0);
 
-        BadHttpRequestExceptionHandler.Handle(ctx, new BadHttpRequestException("bad", inner), JsonNamingPolicy.CamelCase);
+        BadHttpRequestExceptionHandler.Handle(
+            ctx,
+            new BadHttpRequestException(
+                "bad",
+                inner),
+            JsonNamingPolicy.CamelCase);
 
-        Dictionary<string, string[]> errors = Assert.IsType<Dictionary<string, string[]>>(ctx.ProblemDetails.Extensions["errors"]);
+        Dictionary<string, string[]> errors =
+            Assert.IsType<Dictionary<string, string[]>>(ctx.ProblemDetails.Extensions["errors"]);
         Assert.Equal("One or more fields have an invalid data type format.", Assert.Single(errors["request"]));
     }
 }

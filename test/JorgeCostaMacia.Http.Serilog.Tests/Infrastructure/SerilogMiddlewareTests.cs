@@ -37,11 +37,13 @@ public class SerilogMiddlewareTests
         app.UseEnrichRequestMiddleware();
         app.UseEnrichAuthenticationMiddleware();
         app.UseSerilogRequestLogging(options => options.WithDefaults());
-        app.MapPost("/echo", async (HttpRequest request) =>
-        {
-            using StreamReader reader = new StreamReader(request.Body);
-            return Results.Text(await reader.ReadToEndAsync());
-        });
+        app.MapPost(
+            "/echo",
+            async (HttpRequest request) =>
+            {
+                using StreamReader reader = new StreamReader(request.Body);
+                return Results.Text(await reader.ReadToEndAsync());
+            });
         app.MapGet("/ok", () => Results.Ok());
         app.MapGet("/missing", () => Results.NotFound());
 
@@ -59,10 +61,15 @@ public class SerilogMiddlewareTests
         (WebApplication app, HttpClient client) = await App();
         await using (app)
         {
-            HttpResponseMessage response = await client.PostAsync("/echo", new StringContent("{\"name\":\"pepe\"}", Encoding.UTF8, "application/json"), TestContext.Current.CancellationToken);
+            HttpResponseMessage response = await client.PostAsync(
+                "/echo",
+                new StringContent("{\"name\":\"pepe\"}", Encoding.UTF8, "application/json"),
+                TestContext.Current.CancellationToken);
 
             // the endpoint read the body AFTER the enrichment already consumed it — buffering works
-            Assert.Equal("{\"name\":\"pepe\"}", await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+            Assert.Equal(
+                "{\"name\":\"pepe\"}",
+                await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
 
             LogEvent completion = Completion();
             Assert.Equal("{\"name\":\"pepe\"}", ((ScalarValue)completion.Properties["RequestBody"]).Value);
