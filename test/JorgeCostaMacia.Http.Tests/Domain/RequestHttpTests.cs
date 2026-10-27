@@ -10,11 +10,7 @@ public class RequestHttpTests
             Guid? id,
             Guid? correlation,
             DateTime? occurredAt
-        ) : base(
-            id,
-            correlation,
-            occurredAt
-        )
+        ) : base(id, correlation, occurredAt)
         { }
     }
 
