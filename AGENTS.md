@@ -56,6 +56,8 @@ Use the **`gitflow` skill** for any branch/release work — never improvise.
 
 Skills that apply to this repo — let them trigger, or invoke explicitly. The first group is from `jorgecostamacia-agent-skills` (each `-net` skill brings the generic one it realizes); the rest from `dotnet-agent-skills` (the `dotnet/skills` marketplace).
 
+A skill listed here but missing on this machine is one command away: `claude plugin marketplace add JorgeCostaMacia/skills` (or `dotnet/skills`) once, then `claude plugin install <skill>@<marketplace>`.
+
 - **`validation-net`** — the boundary side of the validation spec: request validators via standard FluentValidation DI, and the family `ValidationException` failure list that **`Http.ProblemDetails` renders as per-field errors** — read it before touching exception handling or ProblemDetails.
 - **`ddd-net`** (with **`ddd`**) — the exception family this repo translates to HTTP: typed `NotFound` / `Exist` / `Validation` exceptions with their fixed UUIDv7 codes.
 - **`logging-net`** (with **`logging`**) — the logging style the `Http.Serilog` and `Http.Exception.Serilog` packages implement: fixed messages ("Request End", "Request Fail"), every variable value through the log context, correlation in every scope.
