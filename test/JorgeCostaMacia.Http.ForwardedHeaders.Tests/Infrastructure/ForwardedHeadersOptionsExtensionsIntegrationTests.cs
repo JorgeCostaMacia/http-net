@@ -25,15 +25,17 @@ public class ForwardedHeadersOptionsExtensionsIntegrationTests
         app.Run(_ => Task.CompletedTask);
         await app.StartAsync(TestContext.Current.CancellationToken);
 
-        return await app.GetTestServer().SendAsync(context =>
-        {
-            context.Connection.RemoteIpAddress = from;
-            context.Request.Scheme = "http";
-            context.Request.Host = new HostString("container:8080");
-            context.Request.Headers["X-Forwarded-For"] = "203.0.113.7";
-            context.Request.Headers["X-Forwarded-Proto"] = "https";
-            context.Request.Headers["X-Forwarded-Host"] = "api.example.com";
-        }, TestContext.Current.CancellationToken);
+        return await app.GetTestServer().SendAsync(
+            context =>
+            {
+                context.Connection.RemoteIpAddress = from;
+                context.Request.Scheme = "http";
+                context.Request.Host = new HostString("container:8080");
+                context.Request.Headers["X-Forwarded-For"] = "203.0.113.7";
+                context.Request.Headers["X-Forwarded-Proto"] = "https";
+                context.Request.Headers["X-Forwarded-Host"] = "api.example.com";
+            },
+            TestContext.Current.CancellationToken);
     }
 
     [Fact]

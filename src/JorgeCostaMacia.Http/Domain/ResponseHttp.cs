@@ -13,9 +13,12 @@ namespace JorgeCostaMacia.Http.Domain;
 ///
 /// <para>Properties include:</para>
 /// <list type="bullet">
-///    <item><description><see cref="AggregateId"/>: Unique identifier for the aggregate root or entity targeted by the operation.</description></item>
-///    <item><description><see cref="AggregateCorrelationId"/>: Links this response to the specific distributed transaction context.</description></item>
-///    <item><description><see cref="AggregateOccurredAt"/>: UTC timestamp indicating when the response was generated.</description></item>
+///    <item><description><see cref="AggregateId"/>: Unique identifier for the aggregate root or entity targeted by the
+///    operation.</description></item>
+///    <item><description><see cref="AggregateCorrelationId"/>: Links this response to the specific distributed
+///    transaction context.</description></item>
+///    <item><description><see cref="AggregateOccurredAt"/>: UTC timestamp indicating when the response was
+///    generated.</description></item>
 /// </list>
 ///
 /// <para>
@@ -68,7 +71,11 @@ public abstract record ResponseHttp : IResponseHttp
     /// <param name="aggregateOccurredAt">
     /// The UTC timestamp when the response was issued. If <c>null</c>, it defaults to <see cref="DateTime.UtcNow"/>.
     /// </param>
-    protected ResponseHttp(Guid? aggregateId, Guid? aggregateCorrelationId, DateTime? aggregateOccurredAt)
+    protected ResponseHttp(
+        Guid? aggregateId,
+        Guid? aggregateCorrelationId,
+        DateTime? aggregateOccurredAt
+    )
     {
         AggregateId = aggregateId ?? Guid.CreateVersion7();
         AggregateCorrelationId = aggregateCorrelationId ?? AggregateId;

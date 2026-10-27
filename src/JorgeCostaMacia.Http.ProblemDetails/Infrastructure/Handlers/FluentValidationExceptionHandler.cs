@@ -19,11 +19,16 @@ internal static class FluentValidationExceptionHandler
     /// <param name="ctx">The <see cref="Microsoft.AspNetCore.Http.ProblemDetailsContext"/> being customized.</param>
     /// <param name="exception">The <see cref="FluentValidation.ValidationException"/> being handled.</param>
     /// <param name="namingPolicy">The naming policy used to convert extension keys and field names.</param>
-    public static void Handle(Microsoft.AspNetCore.Http.ProblemDetailsContext ctx, FluentValidation.ValidationException exception, JsonNamingPolicy namingPolicy)
+    public static void Handle(
+        Microsoft.AspNetCore.Http.ProblemDetailsContext ctx,
+        FluentValidation.ValidationException exception,
+        JsonNamingPolicy namingPolicy
+    )
     {
         ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("AggregateId")] = null;
         ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("AggregateCode")] = null;
         ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("AggregateType")] = null;
-        ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("Errors")] = ValidationErrorsHelper.Build(exception.Errors, namingPolicy);
+        ctx.ProblemDetails.Extensions[namingPolicy.ConvertName("Errors")] =
+            ValidationErrorsHelper.Build(exception.Errors, namingPolicy);
     }
 }

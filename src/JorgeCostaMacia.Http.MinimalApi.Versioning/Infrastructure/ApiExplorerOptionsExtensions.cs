@@ -10,7 +10,8 @@ namespace JorgeCostaMacia.Http.MinimalApi.Versioning.Infrastructure;
 /// </summary>
 public static class ApiExplorerOptionsExtensions
 {
-    /// <summary>The group-name format <see cref="WithDefaults"/> applies when none is given: <c>'v'V</c> (e.g. <c>v1</c>).</summary>
+    /// <summary>The group-name format <see cref="WithDefaults"/> applies when none is given: <c>'v'V</c> (e.g.
+    /// <c>v1</c>).</summary>
     private const string DefaultGroupNameFormat = "'v'V";
 
     /// <summary>
@@ -24,7 +25,10 @@ public static class ApiExplorerOptionsExtensions
     /// <see cref="DefaultGroupNameFormat"/> (<c>'v'V</c>).
     /// </param>
     /// <returns>The same <paramref name="options"/>, for chaining.</returns>
-    public static ApiExplorerOptions WithDefaults(this ApiExplorerOptions options, string? groupNameFormat = null)
+    public static ApiExplorerOptions WithDefaults(
+        this ApiExplorerOptions options,
+        string? groupNameFormat = null
+    )
     {
         options.GroupNameFormat = !string.IsNullOrEmpty(groupNameFormat) ? groupNameFormat : DefaultGroupNameFormat;
         options.SubstituteApiVersionInUrl = true;

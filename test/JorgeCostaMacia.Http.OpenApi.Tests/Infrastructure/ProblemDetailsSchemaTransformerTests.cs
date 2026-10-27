@@ -10,7 +10,8 @@ namespace JorgeCostaMacia.Http.OpenApi.Tests.Infrastructure;
 
 public class ProblemDetailsSchemaTransformerTests
 {
-    /// <summary>Generates the OpenAPI document over a TestServer and returns its <c>components/schemas</c> node, with both a ProblemDetails and a ValidationProblemDetails response produced so both schemas appear.</summary>
+    /// <summary>Generates the OpenAPI document over a TestServer and returns its <c>components/schemas</c> node, with
+    /// both a ProblemDetails and a ValidationProblemDetails response produced so both schemas appear.</summary>
     private static async Task<JsonElement> Schemas()
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder();
@@ -25,7 +26,9 @@ public class ProblemDetailsSchemaTransformerTests
 
         await app.StartAsync(TestContext.Current.CancellationToken);
 
-        string document = await app.GetTestClient().GetStringAsync("/openapi/v1.json", TestContext.Current.CancellationToken);
+        string document = await app.GetTestClient().GetStringAsync(
+            "/openapi/v1.json",
+            TestContext.Current.CancellationToken);
 
         return JsonDocument.Parse(document).RootElement.GetProperty("components").GetProperty("schemas");
     }

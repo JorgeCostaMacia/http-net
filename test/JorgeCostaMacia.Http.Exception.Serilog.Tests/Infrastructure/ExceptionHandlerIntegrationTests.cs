@@ -11,7 +11,19 @@ using Serilog.Events;
 namespace JorgeCostaMacia.Http.Exception.Serilog.Tests.Infrastructure;
 
 // a concrete DomainException so the handler takes its Warning + aggregate-enrichment path.
-file sealed class TestDomainException() : DomainException(null, null, null, null, null, "boom", null);
+file sealed class TestDomainException : DomainException
+{
+    public TestDomainException() : base(
+        null,
+        null,
+        null,
+        null,
+        null,
+        "boom",
+        null
+    )
+    { }
+}
 
 /// <summary>
 /// End-to-end tests over <see cref="ExceptionHandler"/> — registered from the host as

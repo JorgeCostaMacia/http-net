@@ -39,7 +39,11 @@ public sealed class EnrichRequestMiddleware
     {
         string body = string.Empty;
 
-        if ((HttpMethods.IsPost(context.Request.Method) || HttpMethods.IsPut(context.Request.Method) || HttpMethods.IsPatch(context.Request.Method)) && context.Request.ContentLength > 0 && context.Request.Body.CanSeek)
+        if ((HttpMethods.IsPost(context.Request.Method)
+                || HttpMethods.IsPut(context.Request.Method)
+                || HttpMethods.IsPatch(context.Request.Method))
+            && context.Request.ContentLength > 0
+            && context.Request.Body.CanSeek)
         {
             try
             {
@@ -49,7 +53,10 @@ public sealed class EnrichRequestMiddleware
                     body = await reader.ReadToEndAsync();
                 }
             }
-            catch { body = "[Error reading body]"; }
+            catch
+            {
+                body = "[Error reading body]";
+            }
             finally
             {
                 // always rewind — a read that failed mid-stream must not leave the endpoint's
@@ -64,8 +71,16 @@ public sealed class EnrichRequestMiddleware
         using (LogContext.PushProperty("RequestContentType", context.Request.ContentType ?? string.Empty))
         using (LogContext.PushProperty("RequestQueryString", context.Request.QueryString.Value ?? string.Empty))
         using (LogContext.PushProperty("RequestBody", body))
-        using (LogContext.PushProperty("UserAgent", context.Request.Headers.TryGetValue("User-Agent", out StringValues userAgent) ? !string.IsNullOrEmpty(userAgent) ? userAgent.ToString() : "unknown" : "unknown"))
-        using (LogContext.PushProperty("XRequestId", context.Request.Headers.TryGetValue("X-Request-ID", out StringValues xRequestId) ? !string.IsNullOrEmpty(xRequestId) ? xRequestId.ToString() : "unknown" : "unknown"))
+        using (LogContext.PushProperty(
+            "UserAgent",
+            context.Request.Headers.TryGetValue("User-Agent", out StringValues userAgent)
+                ? !string.IsNullOrEmpty(userAgent) ? userAgent.ToString() : "unknown"
+                : "unknown"))
+        using (LogContext.PushProperty(
+            "XRequestId",
+            context.Request.Headers.TryGetValue("X-Request-ID", out StringValues xRequestId)
+                ? !string.IsNullOrEmpty(xRequestId) ? xRequestId.ToString() : "unknown"
+                : "unknown"))
         {
             await _next(context);
         }

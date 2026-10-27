@@ -5,7 +5,7 @@ ASP.NET Core building blocks — request/response abstractions, exception handli
 ## Layout
 
 - `src/<Package>/` — one package per folder. `test/<Package>.Tests/` — its tests. `assets/` — icons + social preview.
-- **3-tier `Directory.Build.props`**: **root** (repo identity — Authors / Company / Copyright / Repository — + the single lockstep `VersionPrefix`; TFM `net10.0`; ImplicitUsings, Nullable, AnalysisLevel, EnforceCodeStyleInBuild) → **`src/`** (package-output: icon / readme / license, SourceLink, symbols, `GenerateDocumentationFile`, pack of LICENSE/COPYRIGHT/icon/README) → **`test/`** (test settings). Each `src` csproj declares **only** `Description` / `PackageTags`; everything else is inherited (don't restate it).
+- **3-tier `Directory.Build.props`**: **root** (repo identity — Authors / Company / Copyright / Repository — + the single lockstep `VersionPrefix`; TFM `net10.0`; ImplicitUsings, Nullable, AnalysisLevel, EnforceCodeStyleInBuild, TreatWarningsAsErrors, the NuGet audit; `IsPackable` false by default) → **`src/`** (`IsPackable` true, package-output: icon / readme / license, SourceLink, symbols, `GenerateDocumentationFile`, pack of LICENSE/COPYRIGHT/icon/README) → **`test/`** (test settings). Each `src` csproj declares **only** `Description` / `PackageTags`; everything else is inherited (don't restate it).
 
 ## Targets & stack
 
@@ -13,7 +13,7 @@ ASP.NET Core building blocks — request/response abstractions, exception handli
 - ASP.NET Core deps via **`<FrameworkReference Include="Microsoft.AspNetCore.App" />`** (not the metapackage), so packages stay framework-aligned without pinning a runtime version.
 - Tests: **xUnit v4 (the `xunit.v3` package, 4.x) on Microsoft.Testing.Platform v2 (MTP)** — test projects are `OutputType=Exe`, and `dotnet test` runs MTP because the root **`global.json`** opts in (`"test": { "runner": "Microsoft.Testing.Platform" }`). MTP v2 dropped the VSTest bridge, so `TestingPlatformDotnetTestSupport` is gone and running the tests needs the **.NET 10 SDK**. Not MSTest, not VSTest.
 - Source is **UTF-8 without BOM** (`.editorconfig` `charset = utf-8`). camelCase locals, PascalCase types, I-prefixed interfaces. Copyright year stays **2023** (deliberate — don't bump).
-- **Explicit types everywhere — spell the type out.** Never `var`, never target-typed `new()`, never collection expressions `[]`: write `new Foo(...)`, `new byte[] { ... }`, `new List<T> { ... }`, `Array.Empty<T>()`. The `.editorconfig` sets all three to explicit, but only `var` is analyzer-enforced — `new()`/`[]` can't be flagged (the analyzer never reports the implicit form), so they are **convention, kept explicit by hand and by the IDE generating explicit**. Do not introduce `new()`/`[]` when editing. Full ruleset in `.editorconfig` (shared verbatim with the other JorgeCostaMacia.* repos).
+- **Explicit types everywhere — spell the type out.** Never `var`, never target-typed `new()`, never collection expressions `[]`: write `new Foo(...)`, `new byte[] { ... }`, `new List<T> { ... }`, `Array.Empty<T>()`. The `.editorconfig` sets all three to explicit, but only `var` is analyzer-enforced — `new()`/`[]` can't be flagged (the analyzer never reports the implicit form), so `develop.yml` guards target-typed `new(` and implicit `new[]` with a **grep step** that fails the build; a collection expression `[…]` has no guard and is caught in review only. Do not introduce any of them. Lists follow the 120-column rule of `code-style-net` — declarations and constructions vertical, long calls and comments wrapped. No primary constructors on classes; a positional record stays where its generated properties are the point (a JSON-bound request body). Full ruleset in `.editorconfig` (shared verbatim with the other JorgeCostaMacia.* repos).
 
 ## Dependencies — two kinds
 
@@ -24,6 +24,8 @@ ASP.NET Core building blocks — request/response abstractions, exception handli
 
 Third-party **and** the cross-repo shared-net package versions are centralized in **`Directory.Packages.props`** (`ManagePackageVersionsCentrally=true`): add or bump them **there** as `<PackageVersion>`, and reference packages in csproj **without** a `Version`. (Intra-repo `Http.*` deps are `ProjectReference`, not packages — so CPM doesn't manage them.)
 
+**The strict gates are on**: `TreatWarningsAsErrors` and the NuGet vulnerability audit on every restore (direct and transitive, every severity), so any warning — an advisory included — fails the build. The fix is a version bump or a transitive override in CPM, never `NoWarn`. A third-party version lands once it is three days old, a security fix the day it ships (see `build-net`). The root `nuget.config` clears every inherited source and keeps nuget.org alone: this library consumes nothing else, and an inherited second source would raise `NU1507`. It is **deny-read** for agents — hand changes to it to the user.
+
 ## Versioning — lockstep
 
 A single **`<VersionPrefix>`** lives in the **root `Directory.Build.props`** — bump it once and all packages + their intra-repo cross-deps move together. Never put `VersionPrefix` back in individual csproj.
@@ -31,7 +33,7 @@ A single **`<VersionPrefix>`** lives in the **root `Directory.Build.props`** —
 ## CI / publishing
 
 - `.github/workflows/main.yml`: push to `main` → build → test → `dotnet pack http-net.slnx` → `dotnet nuget push *.nupkg --skip-duplicate` (nuget.org via Trusted Publishing / OIDC, no API-key secret). **The (central) `VersionPrefix` is the publish gate** — only new versions publish.
-- `develop.yml`: builds/tests on develop + PRs (no publish).
+- `develop.yml`: on develop + PRs (no publish): the explicit-types grep, build, the `dotnet format` check, test, and pack as a packaging check. `.gitattributes` checks `*.cs` out as CRLF, so the Linux runner sees what the `.editorconfig` requires.
 - `release.yml`: on a pushed `v*` tag → creates the **GitHub Release** with auto-generated notes.
 - All three declare **top-level** `permissions:` (single job each).
 
@@ -52,15 +54,16 @@ Use the **`gitflow` skill** for any branch/release work — never improvise.
 
 ## Relevant skills
 
-Skills that apply to this repo — let them trigger, or invoke explicitly. `gitflow`, `solid`, `clean-architecture`, `ddd`, `testing`, `logging-net` and `validation-net` are from `jorgecostamacia-agent-skills`; the rest from `dotnet-agent-skills` (the `dotnet/skills` marketplace).
+Skills that apply to this repo — let them trigger, or invoke explicitly. The first group is from `jorgecostamacia-agent-skills` (each `-net` skill brings the generic one it realizes); the rest from `dotnet-agent-skills` (the `dotnet/skills` marketplace).
 
-- **`gitflow`** — all branch/release work (see *Branching & releases* above).
-- **`solid`** — SOLID-principles design review; apply when shaping or reviewing the public surface of these packages (middleware, `Use`/`Add` extensions, handlers).
-- **`clean-architecture`** — layers and the inward dependency rule; these packages ARE the Presentation-side toolkit (thin delivery, transport mapping at the boundary) consumed by the bounded contexts.
-- **`ddd`** — tactical DDD; here mainly domain errors as typed exceptions with fixed codes, which this repo translates to HTTP.
-- **`testing`** — testing principles: done-means-tested, one test file per unit, names as specification, classicist doubles (the TestServer suites), rule coverage.
-- **`logging-net`** — the logging style for every log statement: fixed low-cardinality messages as grouping keys, all variable data via the log context, correlation ids in every scope (the `Http.Serilog` and `Http.Exception.Serilog` packages follow it — "Request End", "Request Fail" + enrichment).
 - **`validation-net`** — the boundary side of the validation spec: request validators via standard FluentValidation DI, and the family `ValidationException` failure list that **`Http.ProblemDetails` renders as per-field errors** — read it before touching exception handling or ProblemDetails.
+- **`ddd-net`** (with **`ddd`**) — the exception family this repo translates to HTTP: typed `NotFound` / `Exist` / `Validation` exceptions with their fixed UUIDv7 codes.
+- **`logging-net`** (with **`logging`**) — the logging style the `Http.Serilog` and `Http.Exception.Serilog` packages implement: fixed messages ("Request End", "Request Fail"), every variable value through the log context, correlation in every scope.
+- **`code-style-net`** — how the C# is written: explicit types, the 120-column width with declarations and constructions vertical, comments wrapped too, the gates.
+- **`build-net`** — the three-tier `Directory.Build.props`, the single `VersionPrefix`, CPM, the three-day package age, the NuGet audit as a build gate, the library's packing metadata, and the `nuget.config` base.
+- **`testing-net`** (with **`testing`**) — xUnit v4 (the `xunit.v3` package) on Microsoft.Testing.Platform, the test project layout, the `TestServer` host suites with hand-written fakes.
+- **`clean-architecture-net`** (with **`clean-architecture`**) / **`solid`** — these packages are the Presentation-side toolkit (thin delivery, transport mapping at the boundary) a host composes; design review of the public surface (middleware, `Use`/`Add` extensions, handlers).
+- **`gitflow`** — all branch/release work (see *Branching & releases* above).
 - **`dotnet-aspnetcore`** — the core domain here (Minimal APIs, middleware, ProblemDetails, OpenAPI, exception handling, API versioning).
 - **`dotnet-webapi`** — HTTP endpoint semantics, OpenAPI metadata, and error-handling shape for the Minimal-API surface these packages support.
 - **`dotnet`** — C# language server + general .NET development.
@@ -80,4 +83,4 @@ dotnet test   http-net.slnx -c Release       # MTP v2 via global.json (needs the
 dotnet pack   http-net.slnx -c Release        # packs all packable; tests are IsPackable=false
 ```
 
-Run **`dotnet format` before committing** — it applies the `.editorconfig` (using ordering, whitespace), the CLI equivalent of Visual Studio's *Code Cleanup*, so generated code doesn't drift from what the IDE would produce. It is deliberately **not** a CI step: `--verify-no-changes` checks the whole solution, so a file nobody touched can fail someone else's push — and on a Linux runner it always would, since `.gitattributes` stores LF while `.editorconfig` requires CRLF. Whitespace and using order are the author's job before committing; anything that is an analyzer diagnostic already fails the build through `EnforceCodeStyleInBuild`.
+Run **`dotnet format` before committing** — it applies the `.editorconfig` (using ordering, whitespace, line endings), the CLI equivalent of Visual Studio's *Code Cleanup*, and it is the normalizer for a `.cs` a shell tool wrote with LF. Develop checks it after the build with `--verify-no-changes`: the solution is clean, so the check only ever fails on what the push itself brought. `.gitattributes` checks `*.cs` out as CRLF (`eol=crlf`), so the Linux runner sees what the `.editorconfig` requires.

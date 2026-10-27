@@ -10,7 +10,8 @@ namespace JorgeCostaMacia.Http.MinimalApi.Versioning.Infrastructure;
 /// </summary>
 public static class ApiVersioningOptionsExtensions
 {
-    /// <summary>The major API version <see cref="WithDefaults"/> assumes when no major is given (or it is <see langword="null"/>).</summary>
+    /// <summary>The major API version <see cref="WithDefaults"/> assumes when no major is given (or it is
+    /// <see langword="null"/>).</summary>
     private const int DefaultMajorVersion = 1;
 
     /// <summary>
@@ -31,7 +32,11 @@ public static class ApiVersioningOptionsExtensions
     /// (e.g. <c>v1</c> rather than <c>v1.0</c>).
     /// </param>
     /// <returns>The same <paramref name="options"/>, for chaining.</returns>
-    public static ApiVersioningOptions WithDefaults(this ApiVersioningOptions options, int? majorVersion = null, int? minorVersion = null)
+    public static ApiVersioningOptions WithDefaults(
+        this ApiVersioningOptions options,
+        int? majorVersion = null,
+        int? minorVersion = null
+    )
     {
         // pick the constructor by whether a minor was given: with one the version is major.minor (v1.1);
         // without one it stays major-only (v1) — the two-arg ctor with a 0 minor would render as v1.0.
