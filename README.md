@@ -4,6 +4,11 @@
 
 # http-net
 
+> **Archived.** http-net continues as [http-dotnet](https://github.com/JorgeCostaMacia/http-dotnet), with the same `JorgeCostaMacia.Http.*` package ids; from
+> 5.0.0 they take the domain exceptions from `JorgeCostaMacia.DDD.Exception` ([ddd-dotnet](https://github.com/JorgeCostaMacia/ddd-dotnet)).
+>
+> The versions published from here stay on nuget.org, and this history stays readable.
+
 > HTTP building blocks for ASP.NET Core — request/response abstractions, exception handling, ProblemDetails, OpenAPI, API versioning, forwarded headers and Serilog request logging — each scoped to a single concern and shipped independently under `JorgeCostaMacia.Http.*`.
 
 [![License](https://img.shields.io/github/license/JorgeCostaMacia/http-net.svg)](LICENSE.txt)
